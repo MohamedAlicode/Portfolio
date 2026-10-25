@@ -54,7 +54,7 @@ export function About({ motion }: { motion: boolean }) {
                   /^ *$/.test(w) ? (
                     <Fragment key={wi}>{w}</Fragment>
                   ) : (
-                    <span key={wi} className={`word ${em ? 'text-accent-ink italic' : ''}`} style={{ '--i': rank++ } as CSSProperties}>
+                    <span key={wi} className={`word ${em ? 'em text-accent-ink italic' : ''}`} style={{ '--i': rank++ } as CSSProperties}>
                       {w}
                     </span>
                   ),

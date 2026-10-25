@@ -249,12 +249,33 @@ html.lenis body {
   .scroll-cue { animation: none; }
 }
 
-/* « Temps » des projets : celui en cours est allumé */
-.beat {
-  transition: opacity 0.5s ease;
+/* « Temps » des projets : celui en cours est allumé. Les autres passent en
+   couleur secondaire (pas en transparence : le texte reste assez contrasté) */
+.beat,
+.beat * {
+  transition: color 0.5s ease;
 }
-[data-motion] .beat:not([data-active]) {
-  opacity: 0.4;
+[data-motion] .beat:not([data-active]),
+[data-motion] .beat:not([data-active]) * {
+  color: var(--muted);
+}
+/* Repère bronze à gauche du temps en cours (dessiné, sans décaler la mise en page) */
+[data-motion] .beat {
+  position: relative;
+}
+[data-motion] .beat::before {
+  content: '';
+  position: absolute;
+  top: 14px;
+  bottom: 14px;
+  left: -14px;
+  width: 2px;
+  background: var(--accent);
+  transform: scaleY(0);
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-motion] .beat[data-active]::before {
+  transform: scaleY(1);
 }
 /* Sur mobile, seul le temps en cours est affiché pendant le film */
 @media (max-width: 1023px) {
@@ -267,6 +288,9 @@ html.lenis body {
   [data-motion] .beat {
     border-bottom: 0;
     padding-top: 0;
+  }
+  [data-motion] .beat::before {
+    display: none;
   }
 }
 
@@ -304,11 +328,11 @@ html.lenis body {
 .entry[data-current] .entry-dot {
   box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 22%, transparent);
 }
-.entry-body {
-  transition: opacity 0.5s;
+.entry-body * {
+  transition: color 0.5s;
 }
-[data-motion] .entry:not([data-on]) .entry-body {
-  opacity: 0.45;
+[data-motion] .entry:not([data-on]) .entry-body :is(h3, p, li, p > span) {
+  color: var(--muted);
 }
 
 /* Lien e-mail : un filet discret, qui se remplit de bronze au survol */
@@ -330,7 +354,7 @@ html.lenis body {
   .skill-fill,
   .skill-name,
   .entry-dot,
-  .entry-body,
+  .entry-body *,
   .mail-link {
     transition: none;
   }
@@ -381,9 +405,16 @@ html.lenis body {
   transform: none;
 }
 
-/* À propos : chaque mot s'éclaire quand la progression (--p) atteint son rang */
+/* À propos : chaque mot s'éclaire quand la progression (--p) atteint son rang.
+   Les mots pas encore atteints restent à moitié : lisibles (contraste 3:1
+   au moins, le texte est grand), et les mots en bronze ne le deviennent qu'une
+   fois éclairés. */
 [data-motion] [data-words] .word {
-  opacity: clamp(0.16, calc(var(--p, 0) * (var(--n) + 4) - var(--i)), 1);
+  --lit: clamp(0, calc(var(--p, 0) * (var(--n) + 4) - var(--i)), 1);
+  opacity: calc(0.5 + 0.5 * var(--lit));
+}
+[data-motion] [data-words] .word.em {
+  color: color-mix(in srgb, var(--accent-ink) calc(var(--lit) * 100%), var(--fg));
 }
 
 /* Pied de page : chaque lettre du nom monte selon la progression (--p) */

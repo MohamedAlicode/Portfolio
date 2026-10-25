@@ -50,10 +50,29 @@ function seoFiles(): Plugin {
   }
 }
 
+// Précharge les deux polices de l'écran d'intro et du hero, pour qu'elles
+// soient là dès le premier affichage (pas de texte qui change de forme)
+function preloadFonts(): Plugin {
+  const wanted = [/instrument-serif-latin-400-normal-.*\.woff2$/, /geist-latin-wght-normal-.*\.woff2$/]
+  return {
+    name: 'preload-fonts',
+    apply: 'build',
+    transformIndexHtml: {
+      order: 'post',
+      handler: (html, ctx) => {
+        const files = Object.keys(ctx.bundle ?? {}).filter((f) => wanted.some((re) => re.test(f)))
+        const links = files
+          .map((f) => `<link rel="preload" href="./${f}" as="font" type="font/woff2" crossorigin />`)
+          .join('\n    ')
+        return html.replace('</title>', `</title>\n    ${links}`)
+      },
+    },
+  }
+}
+
 // base relative : le site fonctionne aussi bien à la racine d'un domaine (Vercel)
 // que dans un sous-dossier (GitHub Pages).
 export default defineConfig({
   base: './',
-  plugins: [seoFiles(), react(), tailwindcss()],
-  build: { minify: process.env.NOMIN ? false : 'oxc' },
+  plugins: [seoFiles(), preloadFonts(), react(), tailwindcss()],
 })

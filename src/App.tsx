@@ -8,6 +8,7 @@ import { Header } from './components/Header'
 import { Hero } from './components/Hero'
 import { ChapterIndicator } from './components/ChapterIndicator'
 import { Projects } from './components/Projects'
+import { projects } from './data/projects'
 import { Skills } from './components/Skills'
 import { Path } from './components/Path'
 import { About } from './components/About'
@@ -15,11 +16,24 @@ import { Contact } from './components/Contact'
 import { Footer } from './components/Footer'
 import { Cursor } from './components/Cursor'
 
+// Sections montées après le hero, dans l'ordre de la page (les trois
+// chapitres de projets d'abord, un par un)
+const LATER = [Skills, Path, About, Contact]
+const STEPS = projects.length + LATER.length + 1
+
 export default function App() {
   const { t, lang } = useLang()
   // Animations complètes, sauf si le système demande moins d'animations
   const [motion] = useState(() => !reducedMotion())
   const [introDone, setIntroDone] = useState(() => !motion)
+  // Pendant l'intro, le reste de la page est monté section par section :
+  // le navigateur ne prépare jamais toute la page d'un seul coup
+  const [mounted, setMounted] = useState(() => (motion ? 0 : STEPS))
+  useEffect(() => {
+    if (mounted >= STEPS) return
+    const id = window.setTimeout(() => setMounted((n) => n + 1), mounted === 0 ? 120 : 16)
+    return () => clearTimeout(id)
+  }, [mounted])
 
   useEffect(() => startSmoothScroll(), [])
   useEffect(() => {
@@ -80,13 +94,12 @@ export default function App() {
       <Header ready={introDone} />
       <main id="contenu">
         <Hero ready={introDone} motion={motion} />
-        <Projects motion={motion} />
-        <Skills motion={motion} />
-        <Path motion={motion} />
-        <About motion={motion} />
-        <Contact motion={motion} />
+        {mounted > 0 && <Projects motion={motion} count={Math.min(mounted, projects.length)} />}
+        {LATER.slice(0, Math.max(0, mounted - projects.length)).map((Section, i) => (
+          <Section key={i} motion={motion} />
+        ))}
       </main>
-      <Footer motion={motion} />
+      {mounted >= STEPS && <Footer motion={motion} />}
       <ChapterIndicator />
       <Cursor />
     </>

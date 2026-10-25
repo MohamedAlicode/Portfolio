@@ -72,10 +72,20 @@ export function Intro({ onDone }: { onDone: () => void }) {
       }
       gsap.ticker.add(tick)
       // Les lettres montent en CSS (voir index.css), dès la première image
+      // Elles attendent la police (400 ms au plus) pour ne pas changer de forme en montant
       const name = root.current!.querySelector('[data-chars]')
-      const raf = requestAnimationFrame(() => name?.setAttribute('data-in', ''))
+      let raf = 0
+      const show = () => {
+        raf = requestAnimationFrame(() => name?.setAttribute('data-in', ''))
+      }
+      const fallback = window.setTimeout(show, 400)
+      document.fonts?.ready.then(() => {
+        clearTimeout(fallback)
+        show()
+      })
       gsap.from('[data-meta]', { autoAlpha: 0, y: 12, duration: 0.8, delay: 0.5, ease: 'power3.out' })
       return () => {
+        clearTimeout(fallback)
         cancelAnimationFrame(raf)
         gsap.ticker.remove(tick)
       }

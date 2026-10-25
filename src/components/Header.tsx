@@ -78,7 +78,7 @@ export function Header({ ready }: { ready: boolean }) {
             data-reveal
             type="button"
             onClick={() => setLang(lang === 'fr' ? 'en' : 'fr')}
-            aria-label={t(ui.langLabel)}
+            aria-label={`${t(ui.langLabel)} (FR / EN)`}
             className="label rounded-full border border-line px-3 py-2 text-muted transition-colors hover:border-fg hover:text-fg"
           >
             <span className={lang === 'fr' ? 'text-fg' : ''}>FR</span> / <span className={lang === 'en' ? 'text-fg' : ''}>EN</span>
@@ -87,7 +87,7 @@ export function Header({ ready }: { ready: boolean }) {
             data-reveal
             type="button"
             onClick={toggle}
-            aria-label={t(ui.themeLabel)}
+            aria-label={`${t(ui.themeLabel)} : ${theme === 'dark' ? t(ui.themeToLight) : t(ui.themeToDark)}`}
             className="label rounded-full border border-line px-3 py-2 text-muted transition-colors hover:border-fg hover:text-fg"
           >
             {theme === 'dark' ? t(ui.themeToLight) : t(ui.themeToDark)}

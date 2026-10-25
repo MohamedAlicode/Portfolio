@@ -5,7 +5,7 @@ import { ProjectChapter } from './ProjectChapter'
 
 const entrances = ['slide', 'curtain', 'rise'] as const
 
-export function Projects({ motion }: { motion: boolean }) {
+export function Projects({ motion, count = projects.length }: { motion: boolean; count?: number }) {
   const { t } = useLang()
   return (
     <section id="projets" aria-labelledby="projets-title">
@@ -16,7 +16,7 @@ export function Projects({ motion }: { motion: boolean }) {
           {t(projectsUi.title)}
         </h2>
       </div>
-      {projects.map((p, i) => (
+      {projects.slice(0, count).map((p, i) => (
         <ProjectChapter
           key={p.slug}
           project={p}
