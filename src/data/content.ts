@@ -81,3 +81,16 @@ export const chapters: Record<string, Localized> = {
   'a-propos': { fr: 'À propos', en: 'About' },
   contact: { fr: 'Contact', en: 'Contact' },
 }
+
+export const projectsUi = {
+  kicker: { fr: 'Projets', en: 'Projects' },
+  title: { fr: 'Trois projets, conçus et codés de A à Z.', en: 'Three projects, designed and built end to end.' },
+  openDemo: { fr: 'Voir la démo', en: 'Live demo' },
+  newTab: { fr: 'nouvel onglet', en: 'new tab' },
+  scrollHint: { fr: 'La démo avance avec le scroll', en: 'The demo moves as you scroll' },
+  honest: { fr: 'À savoir', en: 'Note' },
+  role: { fr: 'Mon rôle', en: 'My role' },
+  stack: { fr: 'Stack', en: 'Stack' },
+  demo: { fr: 'Voir la démo', en: 'Live demo' },
+  code: { fr: 'Voir le code', en: 'Source code' },
+}

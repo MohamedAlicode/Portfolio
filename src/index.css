@@ -249,3 +249,24 @@ html.lenis body {
 @media (prefers-reduced-motion: reduce) {
   .scroll-cue { animation: none; }
 }
+
+/* « Temps » des projets : celui en cours est allumé */
+.beat {
+  transition: opacity 0.5s ease;
+}
+[data-motion] .beat:not([data-active]) {
+  opacity: 0.4;
+}
+/* Sur mobile, seul le temps en cours est affiché pendant le film */
+@media (max-width: 1023px) {
+  [data-motion] .beat:not([data-active]) {
+    display: none;
+  }
+  [data-motion] .beats {
+    border-top: 0;
+  }
+  [data-motion] .beat {
+    border-bottom: 0;
+    padding-top: 0;
+  }
+}

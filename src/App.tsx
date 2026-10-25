@@ -7,7 +7,8 @@ import { Intro } from './components/Intro'
 import { Header } from './components/Header'
 import { Hero } from './components/Hero'
 import { ChapterIndicator } from './components/ChapterIndicator'
-import { Placeholder } from './components/Placeholder'
+import { Projects } from './components/Projects'
+import { Cursor } from './components/Cursor'
 
 export default function App() {
   const { t } = useLang()
@@ -16,6 +17,9 @@ export default function App() {
   const [introDone, setIntroDone] = useState(() => !motion)
 
   useEffect(() => startSmoothScroll(), [])
+  useEffect(() => {
+    document.documentElement.toggleAttribute('data-motion', motion)
+  }, [motion])
   useEffect(() => {
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual'
   }, [])
@@ -39,9 +43,10 @@ export default function App() {
       <Header ready={introDone} />
       <main id="contenu">
         <Hero ready={introDone} motion={motion} />
-        <Placeholder />
+        <Projects motion={motion} />
       </main>
       <ChapterIndicator />
+      <Cursor />
     </>
   )
 }
