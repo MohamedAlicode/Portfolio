@@ -1,9 +1,10 @@
-import { useCallback, useRef } from 'react'
+import { useCallback, useRef, type CSSProperties } from 'react'
 import type { Project } from '../data/projects'
 import { projectsUi } from '../data/content'
 import { useLang } from '../lib/i18n'
 import { clamp, gsap, ScrollTrigger, useGSAP } from '../lib/motion'
 import { useSection } from '../hooks/useSection'
+import { useReveal } from '../hooks/useReveal'
 import { useMagnetic } from '../hooks/useMagnetic'
 import { FilmCanvas } from './FilmCanvas'
 import { Counter } from './Counter'
@@ -18,61 +19,81 @@ export function ProjectChapter({ project, index, total, motion, entrance, flip }
   const { t, lang } = useLang()
   const root = useRef<HTMLElement>(null)
   const pin = useRef<HTMLDivElement>(null)
-  const progress = useRef(motion ? 0 : 0.5)
+  // Sans animations, la démo reste figée sur une image représentative (le 2e temps)
+  const progress = useRef(motion ? 0 : (project.beats[1]?.from ?? 0) / (project.frames - 1))
   const demoBtn = useRef<HTMLAnchorElement>(null)
   const codeBtn = useRef<HTMLAnchorElement>(null)
   useMagnetic(demoBtn)
   useMagnetic(codeBtn)
   useSection(root, project.zone, { id: project.slug, num: index + 1 })
+  useReveal(root, motion, [lang])
 
   // Le scroll pilote le film ; un temps de pause au début et à la fin
   useGSAP(
     () => {
+      if (!motion) return
       ScrollTrigger.create({
         trigger: pin.current,
-        start: motion ? 'top top' : 'top bottom',
-        end: motion ? 'bottom bottom' : 'bottom top',
+        start: 'top top',
+        end: 'bottom bottom',
         onUpdate: (self) => {
-          progress.current = motion ? clamp((self.progress - 0.06) / 0.84) : self.progress
+          progress.current = clamp((self.progress - 0.06) / 0.84)
         },
       })
     },
     { scope: root, dependencies: [motion] },
   )
 
-  // Entrée du chapitre : chaque projet a la sienne (glissé, rideau, montée)
+  // Entrée du chapitre : chaque projet a la sienne (glissé, rideau, montée).
+  // Préparée seulement quand le chapitre approche (rien à calculer au
+  // chargement), jouée aux trois quarts de l'écran, rembobinée si on remonte.
   useGSAP(
-    () => {
-      if (!motion) return
-      const tl = gsap.timeline({
-        defaults: { ease: 'power3.out' },
-        scrollTrigger: { trigger: pin.current, start: 'top 75%', toggleActions: 'play none none reverse' },
-      })
-      const kids = '[data-kid]'
-      tl.fromTo(
-        '[data-film]',
-        { clipPath: 'inset(14% 10% 14% 10% round 14px)' },
-        { clipPath: 'inset(0% 0% 0% 0% round 14px)', duration: 1.4, ease: 'expo.out' },
-        0,
-      )
-      if (entrance === 'slide') tl.from(kids, { x: flip ? -70 : 70, autoAlpha: 0, stagger: 0.09, duration: 1 }, 0.1)
-      else if (entrance === 'curtain')
+    (_, contextSafe) => {
+      const el = pin.current
+      if (!motion || !el || !contextSafe) return
+      let tl: gsap.core.Timeline | null = null
+      const build = contextSafe(() => {
+        tl = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } })
+        // Seulement les éléments affichés (certains n'existent qu'en grand écran)
+        const kids = gsap.utils.toArray<HTMLElement>('[data-kid]', root.current).filter((k) => k.getClientRects().length > 0)
         tl.fromTo(
-          kids,
-          { clipPath: 'inset(100% 0% -20% 0%)', y: 24, autoAlpha: 0 },
-          { clipPath: 'inset(-20% 0% -20% 0%)', y: 0, autoAlpha: 1, stagger: 0.09, duration: 1.1, ease: 'power4.inOut' },
-          0.1,
+          '[data-film]',
+          { clipPath: 'inset(14% 10% 14% 10% round 14px)' },
+          { clipPath: 'inset(0% 0% 0% 0% round 14px)', duration: 1.4, ease: 'expo.out' },
+          0,
         )
-      else tl.from(kids, { y: 50, rotation: 2, transformOrigin: '0% 100%', autoAlpha: 0, stagger: 0.08, duration: 1 }, 0.1)
-
-      gsap.from('[data-detail]', {
-        y: 40,
-        autoAlpha: 0,
-        stagger: 0.08,
-        duration: 1,
-        ease: 'power3.out',
-        scrollTrigger: { trigger: '[data-details]', start: 'top 85%', toggleActions: 'play none none reverse' },
+        if (entrance === 'slide') tl.from(kids, { x: flip ? -70 : 70, autoAlpha: 0, stagger: 0.09, duration: 1 }, 0.1)
+        else if (entrance === 'curtain')
+          tl.fromTo(
+            kids,
+            { clipPath: 'inset(100% 0% -20% 0%)', y: 24, autoAlpha: 0 },
+            { clipPath: 'inset(-20% 0% -20% 0%)', y: 0, autoAlpha: 1, stagger: 0.09, duration: 1.1, ease: 'power4.inOut' },
+            0.1,
+          )
+        else tl.from(kids, { y: 50, rotation: 2, transformOrigin: '0% 100%', autoAlpha: 0, stagger: 0.08, duration: 1 }, 0.1)
       })
+
+      const near = new IntersectionObserver(
+        ([e]) => {
+          if (!e.isIntersecting || tl) return
+          build()
+          near.disconnect()
+          play.observe(el)
+        },
+        { rootMargin: '100% 0px' },
+      )
+      const play = new IntersectionObserver(
+        ([e]) => {
+          if (e.isIntersecting) tl?.play()
+          else if (e.boundingClientRect.top > 0) tl?.reverse()
+        },
+        { rootMargin: '0px 0px -25% 0px' },
+      )
+      near.observe(el)
+      return () => {
+        near.disconnect()
+        play.disconnect()
+      }
     },
     { scope: root, dependencies: [motion, lang], revertOnUpdate: true },
   )
@@ -127,7 +148,7 @@ export function ProjectChapter({ project, index, total, motion, entrance, flip }
               />
               <div className="mt-3 flex items-center gap-4">
                 <span className="relative block h-px flex-1 overflow-hidden bg-line">
-                  <span data-progress className="absolute inset-0 origin-left scale-x-0 bg-accent" />
+                  <span data-progress className="absolute inset-0 origin-left bg-accent" style={{ transform: 'scaleX(0)' }} />
                 </span>
                 <span className="label text-[11px] text-muted">{t(projectsUi.scrollHint)}</span>
               </div>
@@ -169,13 +190,13 @@ export function ProjectChapter({ project, index, total, motion, entrance, flip }
 
       <div data-details className="wrap grid gap-12 pt-6 pb-28 lg:grid-cols-12 lg:gap-14 lg:pb-40">
         {motion && (
-          <div data-detail className="lg:hidden">
+          <div data-up style={{ '--d': 0 } as CSSProperties} className="lg:hidden">
             <Intro project={project} />
           </div>
         )}
         <dl className="grid grid-cols-3 gap-4 lg:col-span-7">
           {project.facts.map((f, i) => (
-            <div data-detail key={i} className="min-w-0 border-t border-line pt-5">
+            <div data-up style={{ '--d': 1 + i } as CSSProperties} key={i} className="min-w-0 border-t border-line pt-5">
               <dt className="sr-only">{t(f.label)}</dt>
               <dd className="m-0">
                 <span className="block font-display text-[clamp(40px,5vw,76px)] leading-none">
@@ -189,17 +210,17 @@ export function ProjectChapter({ project, index, total, motion, entrance, flip }
           ))}
         </dl>
         <div className="min-w-0 lg:col-span-5">
-          <p data-detail className="label text-muted">{t(projectsUi.role)}</p>
-          <p data-detail className="mt-2">{t(project.role)}</p>
-          <p data-detail className="label mt-7 text-muted">{t(projectsUi.stack)}</p>
-          <ul data-detail className="mt-3 flex flex-wrap gap-1.5">
+          <p data-up style={{ '--d': 2 } as CSSProperties} className="label text-muted">{t(projectsUi.role)}</p>
+          <p data-up style={{ '--d': 3 } as CSSProperties} className="mt-2">{t(project.role)}</p>
+          <p data-up style={{ '--d': 4 } as CSSProperties} className="label mt-7 text-muted">{t(projectsUi.stack)}</p>
+          <ul data-up style={{ '--d': 5 } as CSSProperties} className="mt-3 flex flex-wrap gap-1.5">
             {project.stack.map((s) => (
               <li key={s} className="rounded-[4px] border border-line px-2.5 py-1 text-[13px] text-muted">
                 {s}
               </li>
             ))}
           </ul>
-          <div data-detail className="mt-8 flex flex-wrap gap-3">
+          <div data-up style={{ '--d': 6 } as CSSProperties} className="mt-8 flex flex-wrap gap-3">
             <a ref={demoBtn} href={project.demo} target="_blank" rel="noopener" className="btn btn-primary">
               {t(projectsUi.demo)} <span className="arrow" aria-hidden="true">↗</span>
               <span className="sr-only">({t(projectsUi.newTab)})</span>
@@ -210,7 +231,7 @@ export function ProjectChapter({ project, index, total, motion, entrance, flip }
             </a>
           </div>
           {project.demoNote && (
-            <p data-detail className="mt-4 text-[13.5px] text-muted">
+            <p data-up style={{ '--d': 6 } as CSSProperties} className="mt-4 text-[13.5px] text-muted">
               {t(project.demoNote)}
             </p>
           )}

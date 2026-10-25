@@ -47,7 +47,7 @@ export const projects: Project[] = [
     },
     role,
     notice: {
-      fr: 'Projet fictif : aucune montre n’est vendue, le paiement fonctionne en mode test.',
+      fr: 'Projet fictif : aucune montre n’est vendue, le paiement fonctionne en mode test.',
       en: 'Fictional project: no watch is sold, payment runs in Stripe test mode.',
     },
     beats: [
@@ -63,7 +63,7 @@ export const projects: Project[] = [
         from: 27,
         title: { fr: 'Catalogue', en: 'Catalogue' },
         text: {
-          fr: '9 filtres combinables avec le nombre de résultats sur chaque option. Tout l’état vit dans l’URL : une recherche se partage.',
+          fr: '9 filtres combinables avec le nombre de résultats sur chaque option. Tout l’état vit dans l’URL : une recherche se partage.',
           en: '9 combinable filters showing the result count on each option. All state lives in the URL, so a search can be shared.',
         },
       },
@@ -98,7 +98,7 @@ export const projects: Project[] = [
     code: 'https://github.com/MohamedAlicode/Maison-Cadran',
     url: 'maison-cadran.vercel.app',
     poster: {
-      fr: 'Démo de Maison Cadran : accueil, catalogue filtré, fiche produit avec galerie, ajout au panier.',
+      fr: 'Démo de Maison Cadran : accueil, catalogue filtré, fiche produit avec galerie, ajout au panier.',
       en: 'Maison Cadran demo: home page, filtered catalogue, product page with gallery, add to cart.',
     },
   },
@@ -123,7 +123,7 @@ export const projects: Project[] = [
         from: 0,
         title: { fr: 'Écran d’intro', en: 'Intro screen' },
         text: {
-          fr: 'Une nuit étoilée couvre le chargement : la page s’ouvre dès que les 24 premières images sont arrivées.',
+          fr: 'Une nuit étoilée couvre le chargement : la page s’ouvre dès que les 24 premières images sont arrivées.',
           en: 'A starry night covers loading: the page opens as soon as the first 24 frames have arrived.',
         },
       },
@@ -162,7 +162,7 @@ export const projects: Project[] = [
     code: 'https://github.com/MohamedAlicode/landing-page-althaire',
     url: 'mohamedalicode.github.io',
     poster: {
-      fr: 'Démo d’Altaïr : écran d’intro étoilé, puis le flacon et son coffret qui s’ouvrent et se démontent au fil des chapitres.',
+      fr: 'Démo d’Altaïr : écran d’intro étoilé, puis le flacon et son coffret qui s’ouvrent et se démontent au fil des chapitres.',
       en: 'Altaïr demo: starry intro screen, then the bottle and its box opening and coming apart chapter by chapter.',
     },
   },
@@ -174,7 +174,7 @@ export const projects: Project[] = [
     zone: 'deep',
     kind: { fr: 'Application temps réel', en: 'Real-time app' },
     hook: {
-      fr: 'Un quiz multijoueur type Kahoot : l’hôte projette les questions, les joueurs répondent depuis leur téléphone.',
+      fr: 'Un quiz multijoueur type Kahoot : l’hôte projette les questions, les joueurs répondent depuis leur téléphone.',
       en: 'A Kahoot-style multiplayer quiz: the host projects the questions, players answer from their phones.',
     },
     role,
@@ -191,7 +191,7 @@ export const projects: Project[] = [
         from: 30,
         title: { fr: 'Question', en: 'Question' },
         text: {
-          fr: 'Horloge synchronisée : tous les écrans affichent le même compte à rebours, même si l’heure d’un téléphone est fausse.',
+          fr: 'Horloge synchronisée : tous les écrans affichent le même compte à rebours, même si l’heure d’un téléphone est fausse.',
           en: 'Synchronised clock: every screen shows the same countdown, even when a phone’s clock is wrong.',
         },
       },
@@ -199,7 +199,7 @@ export const projects: Project[] = [
         from: 60,
         title: { fr: 'Résultats', en: 'Results' },
         text: {
-          fr: 'Le serveur est la seule source de vérité : il note les réponses, et la bonne n’est jamais envoyée avant la fin.',
+          fr: 'Le serveur est la seule source de vérité : il note les réponses, et la bonne n’est jamais envoyée avant la fin.',
           en: 'The server is the single source of truth: it scores answers, and the right one is never sent early.',
         },
       },
@@ -214,19 +214,19 @@ export const projects: Project[] = [
     ],
     facts: [
       { value: 6, label: { fr: 'chiffres pour rejoindre', en: 'digits to join' } },
-      { value: 3, label: { fr: 'paquets : web, serveur, code partagé', en: 'packages: web, server, shared code' } },
+      { value: 3, label: { fr: 'paquets : web, serveur, code partagé', en: 'packages: web, server, shared code' } },
       { value: 18, label: { fr: 'fichiers de tests Vitest', en: 'Vitest test files' } },
     ],
     stack: ['React 19', 'Vite', 'Zustand', 'Node.js', 'Express 5', 'Socket.IO', 'PostgreSQL', 'Prisma', 'Zod', 'Framer Motion', 'GSAP', 'Docker'],
     demo: 'https://quiz-live-hk3r.onrender.com',
     code: 'https://github.com/MohamedAlicode/online-quiz',
     demoNote: {
-      fr: 'Hébergement gratuit : la première ouverture peut prendre une trentaine de secondes.',
+      fr: 'Hébergement gratuit : la première ouverture peut prendre une trentaine de secondes.',
       en: 'Free hosting: the first visit can take about thirty seconds.',
     },
     url: 'quiz-live-hk3r.onrender.com',
     poster: {
-      fr: 'Démo de Quiz Live : lobby avec code, compte à rebours, question sur l’écran et le téléphone, résultats, podium avec confettis.',
+      fr: 'Démo de Quiz Live : lobby avec code, compte à rebours, question sur l’écran et le téléphone, résultats, podium avec confettis.',
       en: 'Quiz Live demo: lobby with code, countdown, question on screen and phone, results, podium with confetti.',
     },
   },

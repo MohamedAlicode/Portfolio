@@ -3,15 +3,35 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>Mohamed Ali Ouachani · Développeur web full-stack</title>
-    <meta name="description" content="Portfolio de Mohamed Ali Ouachani, développeur web full-stack à Paris (React, Next.js, TypeScript, Node.js, PostgreSQL). Trois projets à découvrir : Maison Cadran, Altaïr, Quiz Live." />
+    <title>%SITE_TITLE%</title>
+    <meta name="description" content="%SITE_DESCRIPTION%" />
+    <meta name="author" content="Mohamed Ali Ouachani" />
     <meta name="theme-color" content="#0a1a2a" />
+    <link rel="canonical" href="%SITE_URL%" />
+    <link rel="alternate" hreflang="fr" href="%SITE_URL%" />
+    <link rel="alternate" hreflang="en" href="%SITE_URL%?lang=en" />
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+
+    <!-- Aperçu au partage (LinkedIn, Slack, WhatsApp…) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="%SITE_URL%" />
+    <meta property="og:title" content="%SITE_TITLE%" />
+    <meta property="og:description" content="%SITE_DESCRIPTION%" />
+    <meta property="og:image" content="%SITE_URL%og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Mohamed Ali Ouachani, développeur web full-stack" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:locale:alternate" content="en_GB" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json">%PERSON_JSON%</script>
+
     <script>
-      // Thème mémorisé, posé avant l'affichage pour éviter un flash
+      // Thème mémorisé et mode animé, posés avant l'affichage pour éviter un flash
       try {
         if (localStorage.getItem('theme') === 'light') document.documentElement.dataset.scheme = 'light'
       } catch (e) {}
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.setAttribute('data-motion', '')
     </script>
   </head>
   <body>

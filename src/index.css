@@ -92,7 +92,7 @@
   --muted: #2b556e;
   --line: #d2c7b3;
   --surface: #ded5c3;
-  --accent-ink: #7a5c2e;
+  --accent-ink: #6b4f26;
   color-scheme: light;
 }
 
@@ -224,7 +224,6 @@ html.lenis body {
   }
   .char {
     display: inline-block;
-    will-change: transform;
   }
 }
 
@@ -269,4 +268,125 @@ html.lenis body {
     border-bottom: 0;
     padding-top: 0;
   }
+}
+
+/* Lignes de compétences : filet bronze et nom qui glisse au survol */
+.skill-fill {
+  transform: scaleX(0);
+}
+.skill-fill,
+.skill-name {
+  transition:
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.4s;
+}
+@media (hover: hover) {
+  .skill:hover .skill-fill {
+    transform: scaleX(1);
+  }
+  .skill:hover .skill-name {
+    transform: translateX(10px);
+    color: var(--accent-ink);
+  }
+}
+
+/* Parcours : les étapes s'allument quand la lecture les atteint */
+.entry-dot {
+  transition:
+    background-color 0.4s,
+    border-color 0.4s,
+    box-shadow 0.4s;
+}
+.entry[data-on] .entry-dot {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.entry[data-current] .entry-dot {
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+.entry-body {
+  transition: opacity 0.5s;
+}
+[data-motion] .entry:not([data-on]) .entry-body {
+  opacity: 0.45;
+}
+
+/* Lien e-mail : un filet discret, qui se remplit de bronze au survol */
+.mail-link {
+  background:
+    linear-gradient(var(--accent), var(--accent)) 0 100% / 0 2px no-repeat,
+    linear-gradient(var(--line), var(--line)) 0 100% / 100% 1px no-repeat;
+  padding-bottom: 0.08em;
+  transition: background-size 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.mail-link:hover,
+.mail-link:focus-visible {
+  background-size:
+    100% 2px,
+    100% 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skill-fill,
+  .skill-name,
+  .entry-dot,
+  .entry-body,
+  .mail-link {
+    transition: none;
+  }
+}
+
+/* Entrées au scroll (useReveal) : état de départ, puis data-in les joue.
+   Seulement avec les animations : sinon tout est visible d'emblée. */
+[data-motion] [data-chars] .char {
+  transform: translateY(115%);
+  transition: transform 1.1s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: calc(var(--base, 0ms) + var(--i, 0) * 16ms);
+}
+[data-motion] [data-chars][data-in] .char {
+  transform: none;
+}
+/* Sortie vers le haut (écran d'intro) */
+[data-motion] [data-chars][data-out] .char {
+  transform: translateY(-110%);
+  transition: transform 0.7s cubic-bezier(0.55, 0, 1, 0.45);
+  transition-delay: calc(var(--i, 0) * 12ms);
+}
+[data-motion] [data-up],
+[data-motion] [data-stagger] > * {
+  opacity: 0;
+  transform: translateY(40px);
+  transition:
+    opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-motion] [data-up] {
+  transition-delay: calc(var(--base, 0ms) + var(--d, 0) * 70ms);
+}
+[data-motion] [data-stagger] > * {
+  transform: translateY(22px);
+  transition-delay: calc(var(--i, 0) * 35ms);
+}
+[data-motion] [data-up][data-in],
+[data-motion] [data-stagger][data-in] > * {
+  opacity: 1;
+  transform: none;
+}
+[data-motion] [data-draw] {
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+[data-motion] [data-draw][data-in] {
+  transform: none;
+}
+
+/* À propos : chaque mot s'éclaire quand la progression (--p) atteint son rang */
+[data-motion] [data-words] .word {
+  opacity: clamp(0.16, calc(var(--p, 0) * (var(--n) + 4) - var(--i)), 1);
+}
+
+/* Pied de page : chaque lettre du nom monte selon la progression (--p) */
+[data-motion] .mark-char {
+  transform: translateY(calc((1 - clamp(0, (var(--p, 0) * (var(--n) + 6) - var(--i)) / 6, 1)) * 105%));
 }

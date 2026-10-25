@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, type CSSProperties } from 'react'
 import { hero, ui } from '../data/content'
 import { useLang } from '../lib/i18n'
 import { gsap, finePointer, useGSAP } from '../lib/motion'
@@ -18,20 +18,6 @@ export function Hero({ ready, motion }: { ready: boolean; motion: boolean }) {
   const cta2 = useRef<HTMLAnchorElement>(null)
   useMagnetic(cta1)
   useMagnetic(cta2)
-
-  // Entrée, une fois l'intro levée
-  useGSAP(
-    () => {
-      if (!motion) return
-      gsap.set('.char', { yPercent: 115 })
-      gsap.set('[data-fade]', { autoAlpha: 0, y: 24 })
-      if (!ready) return
-      const tl = gsap.timeline({ defaults: { ease: 'expo.out' } })
-      tl.to('.char', { yPercent: 0, duration: 1.35, stagger: 0.018 }, 0.1)
-        .to('[data-fade]', { autoAlpha: 1, y: 0, duration: 1.1, stagger: 0.08 }, 0.55)
-    },
-    { scope: root, dependencies: [ready, motion] },
-  )
 
   // Au scroll : le titre recule, le cercle s'ouvre sur les projets
   useGSAP(
@@ -56,7 +42,10 @@ export function Hero({ ready, motion }: { ready: boolean; motion: boolean }) {
         },
       })
       tl.to('[data-hero-content]', { yPercent: -12, scale: 0.92, duration: 0.6 }, 0)
-        .to('[data-hero-content]', { autoAlpha: 0, duration: 0.42 }, 0.18)
+        // Le contenu s'efface sans quitter l'arbre d'accessibilité (le titre reste
+        // lisible par les lecteurs d'écran) ; seuls les liens deviennent inactifs
+        .to('[data-hero-content]', { opacity: 0, duration: 0.42 }, 0.18)
+        .set('[data-hero-content] a', { visibility: 'hidden' }, 0.6)
         .to('[data-hero-meta]', { autoAlpha: 0, duration: 0.2 }, 0.05)
         .fromTo(
           '[data-portal]',
@@ -99,6 +88,9 @@ export function Hero({ ready, motion }: { ready: boolean; motion: boolean }) {
     { scope: root, dependencies: [motion] },
   )
 
+  // Entrée, une fois l'intro levée : jouée en CSS (lettres puis blocs)
+  const inAttr = ready ? { 'data-in': '' } : {}
+
   const go = (e: React.MouseEvent<HTMLAnchorElement>, hash: string) => {
     e.preventDefault()
     scrollToHash(hash)
@@ -133,7 +125,7 @@ export function Hero({ ready, motion }: { ready: boolean; motion: boolean }) {
 
         <div className="wrap relative flex h-full min-h-svh flex-col justify-center pt-24 pb-24">
           <div data-hero-content className="origin-[0%_50%]">
-            <p data-fade className="mb-6 flex items-center gap-3 text-[14px] text-muted">
+            <p data-up {...inAttr} style={{ '--base': '550ms', '--d': 0 } as CSSProperties} className="mb-6 flex items-center gap-3 text-[14px] text-muted">
               <span className="relative flex h-2 w-2">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-60 motion-reduce:animate-none" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
@@ -142,14 +134,17 @@ export function Hero({ ready, motion }: { ready: boolean; motion: boolean }) {
             </p>
             <h1
               id="hero-title"
+              data-chars
+              {...inAttr}
+              style={{ '--base': '100ms' } as CSSProperties}
               className="font-display text-[clamp(52px,min(9.4vw,15svh),156px)] leading-[0.92] font-normal tracking-[-0.025em]"
             >
               <SplitChars lines={t(hero.title)} />
             </h1>
-            <p data-fade className="mt-8 max-w-[54ch] text-[clamp(17px,1.5vw,20px)] leading-[1.6] text-muted">
+            <p data-up {...inAttr} style={{ '--base': '550ms', '--d': 1 } as CSSProperties} className="mt-8 max-w-[54ch] text-[clamp(17px,1.5vw,20px)] leading-[1.6] text-muted">
               {t(hero.intro)}
             </p>
-            <div data-fade className="mt-8 flex flex-wrap gap-3">
+            <div data-up {...inAttr} style={{ '--base': '550ms', '--d': 2 } as CSSProperties} className="mt-8 flex flex-wrap gap-3">
               <a ref={cta1} href="#projets" onClick={(e) => go(e, '#projets')} className="btn btn-primary">
                 {t(hero.ctaProjects)} <span className="arrow" aria-hidden="true">→</span>
               </a>
@@ -165,13 +160,13 @@ export function Hero({ ready, motion }: { ready: boolean; motion: boolean }) {
           className="wrap absolute inset-x-0 flex items-end justify-between gap-6"
           style={{ bottom: 'calc(28px + env(safe-area-inset-bottom, 0px))' }}
         >
-          <ul data-fade className="label flex flex-wrap gap-x-5 gap-y-1 text-muted xl:hidden">
+          <ul data-up {...inAttr} style={{ '--base': '550ms', '--d': 3 } as CSSProperties} className="label flex flex-wrap gap-x-5 gap-y-1 text-muted xl:hidden">
             {t(hero.eyebrow).map((item) => (
               <li key={item}>{item}</li>
             ))}
           </ul>
           {motion && (
-            <span data-fade aria-hidden="true" className="label hidden items-center gap-3 text-muted sm:flex">
+            <span data-up {...inAttr} style={{ '--base': '550ms', '--d': 4 } as CSSProperties} aria-hidden="true" className="label hidden items-center gap-3 text-muted sm:flex">
               {t(ui.scroll)}
               <span className="relative block h-10 w-px overflow-hidden bg-line">
                 <span className="scroll-cue absolute inset-x-0 top-0 h-1/2 bg-accent" />
@@ -181,22 +176,24 @@ export function Hero({ ready, motion }: { ready: boolean; motion: boolean }) {
         </div>
 
         {/* Cartouche façon plan technique (grand écran) */}
-        <dl
+        <div
           data-hero-content
           className="absolute right-[max(48px,calc((100vw-1320px)/2+48px))] hidden w-[340px] border border-line text-[13px] xl:block"
           style={{ bottom: 'calc(96px + env(safe-area-inset-bottom, 0px))' }}
         >
-          <div data-fade className="label flex justify-between border-b border-line px-4 py-3 text-accent-ink">
+          <p data-up {...inAttr} style={{ '--base': '550ms', '--d': 5 } as CSSProperties} className="label flex justify-between border-b border-line px-4 py-3 text-accent-ink">
             <span>{t(hero.sheet.title)}</span>
             <span className="tabular-nums">2026</span>
-          </div>
-          {hero.sheet.rows.map((row) => (
-            <div data-fade key={row.k.fr} className="grid grid-cols-[96px_1fr] border-b border-line last:border-b-0">
-              <dt className="label border-r border-line px-4 py-2.5 text-[10.5px] text-muted">{t(row.k)}</dt>
-              <dd className="px-4 py-2.5">{t(row.v)}</dd>
-            </div>
-          ))}
-        </dl>
+          </p>
+          <dl className="m-0">
+            {hero.sheet.rows.map((row) => (
+              <div data-up {...inAttr} style={{ '--base': '550ms', '--d': 6 } as CSSProperties} key={row.k.fr} className="grid grid-cols-[96px_1fr] border-b border-line last:border-b-0">
+                <dt className="label border-r border-line px-4 py-2.5 text-[10.5px] text-muted">{t(row.k)}</dt>
+                <dd className="m-0 px-4 py-2.5">{t(row.v)}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
 
         {/* Le cercle qui s'ouvre sur les projets (le vrai titre de section est dans Projets) */}
         {motion && (
