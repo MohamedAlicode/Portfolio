@@ -47,7 +47,7 @@ export function Path({ motion }: { motion: boolean }) {
   const text = (v: string | Localized) => (typeof v === 'string' ? v : t(v))
 
   return (
-    <section id="parcours" ref={root} aria-labelledby="parcours-title" className="relative py-28 lg:py-40">
+    <section id="parcours" ref={root} aria-labelledby="parcours-title" className="relative py-20 lg:py-28">
       <div className="wrap grid gap-14 lg:grid-cols-12 lg:gap-14">
         <header className="lg:col-span-5">
           <div className="lg:sticky lg:top-28">
@@ -88,7 +88,7 @@ export function Path({ motion }: { motion: boolean }) {
                 data-entry
                 {...(i <= current ? { 'data-on': '' } : {})}
                 {...(i === current ? { 'data-current': '' } : {})}
-                className="entry relative pb-14 pl-11 last:pb-0 lg:pb-16"
+                className="entry relative pb-12 pl-11 last:pb-0 lg:pb-14"
               >
                 <span
                   aria-hidden="true"

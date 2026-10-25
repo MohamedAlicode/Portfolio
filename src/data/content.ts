@@ -78,8 +78,8 @@ export const hero = {
     en: 'Three projects, designed and built end to end.',
   },
   portalText: {
-    fr: 'Faites défiler : chaque démo se rejoue image par image.',
-    en: 'Keep scrolling: each demo replays frame by frame.',
+    fr: 'Chaque démo tourne en boucle\u00a0: cliquez dessus pour ouvrir le site en vrai.',
+    en: 'Each demo plays on a loop: click it to open the real site.',
   },
 }
 
@@ -99,7 +99,9 @@ export const projectsUi = {
   title: { fr: 'Trois projets, conçus et codés de A à Z.', en: 'Three projects, designed and built end to end.' },
   openDemo: { fr: 'Voir la démo', en: 'Live demo' },
   newTab: { fr: 'nouvel onglet', en: 'new tab' },
-  scrollHint: { fr: 'La démo avance avec le scroll', en: 'The demo moves as you scroll' },
+  play: { fr: 'Lecture', en: 'Play' },
+  pause: { fr: 'Pause', en: 'Pause' },
+  demoOf: { fr: 'démo de', en: 'demo of' },
   honest: { fr: 'À savoir', en: 'Note' },
   role: { fr: 'Mon rôle', en: 'My role' },
   stack: { fr: 'Stack', en: 'Stack' },

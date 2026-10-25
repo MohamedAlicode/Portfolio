@@ -277,18 +277,8 @@ html.lenis body {
 [data-motion] .beat[data-active]::before {
   transform: scaleY(1);
 }
-/* Sur mobile, seul le temps en cours est affiché pendant le film */
+/* Sur mobile, pas de place dans la marge pour le repère : la couleur suffit */
 @media (max-width: 1023px) {
-  [data-motion] .beat:not([data-active]) {
-    display: none;
-  }
-  [data-motion] .beats {
-    border-top: 0;
-  }
-  [data-motion] .beat {
-    border-bottom: 0;
-    padding-top: 0;
-  }
   [data-motion] .beat::before {
     display: none;
   }

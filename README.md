@@ -8,7 +8,7 @@ Site personnel d'un développeur web full-stack basé à Paris, en français et 
 Le site tient sur une seule page :
 
 - l'accueil ;
-- trois projets rejoués au scroll (Maison Cadran, Altaïr, Quiz Live) ;
+- trois projets, chacun avec sa démo en vidéo (Maison Cadran, Altaïr, Quiz Live) ;
 - les compétences ;
 - le parcours ;
 - quelques lignes « à propos » ;
@@ -18,10 +18,10 @@ Le site tient sur une seule page :
 
 - **Vite + React + TypeScript**, styles en **Tailwind CSS 4**. Le site est 100 % statique : pas de serveur, pas de base de données.
 - **Animations :** GSAP (ScrollTrigger, SplitText) et Lenis pour le défilement fluide.
-- **Mouvements réduits :** si le visiteur a demandé moins d'animations dans son système (`prefers-reduced-motion`), tout s'affiche directement et les démos restent sur une image fixe.
+- **Mouvements réduits :** si le visiteur a demandé moins d'animations dans son système (`prefers-reduced-motion`), tout s'affiche directement et les démos attendent qu'on appuie sur Lecture.
 - **Référencement :** titre et description dans les deux langues, aperçu au partage (Open Graph), données structurées, `sitemap.xml` et `robots.txt` générés au build.
 - **Mesures Lighthouse** (en local) :
-  - mobile : Performance 94, Accessibilité 100, Bonnes pratiques 100, SEO 100 ;
+  - mobile : Performance 93, Accessibilité 100, Bonnes pratiques 100, SEO 100 ;
   - ordinateur : 100 partout.
 
 ## Lancer le site sur son ordinateur
@@ -79,19 +79,23 @@ Si le site change d'adresse (par exemple un nom de domaine à toi), modifie seul
 
 ### Les démos des projets
 
-Chaque démo est un film découpé en images, rejoué au rythme du scroll.
+Chaque démo est une courte vidéo qui tourne en boucle, comme un GIF, avec un bouton Pause.
 
-- Les images sont dans `public/frames/<projet>/` et sont nommées `001.webp`, `002.webp`, etc.
-- Leur nombre est indiqué dans le champ `frames` du projet, dans `projects.ts`.
-- Les étapes (`beats`) s'allument quand le film atteint leur image de départ (`from`).
+- Les vidéos sont dans `public/demos/`, nommées d'après le projet : `maison-cadran.mp4`, etc.
+- À côté de chaque vidéo, une image `.webp` du même nom s'affiche pendant le chargement.
+- Les étapes (`beats`) du projet s'allument quand la vidéo atteint leur seconde de départ (`at`, dans `projects.ts`).
 
-Pour refaire une démo à partir d'une vidéo, avec [ffmpeg](https://ffmpeg.org) :
+Pour transformer un GIF en vidéo, avec [ffmpeg](https://ffmpeg.org) :
 
 ```bash
-ffmpeg -i demo.mp4 -vf "fps=12,scale=800:-1" -c:v libwebp -quality 70 public/frames/mon-projet/%03d.webp
+ffmpeg -i apercu.gif -an -c:v libx264 -crf 25 -pix_fmt yuv420p -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -movflags +faststart public/demos/mon-projet.mp4
 ```
 
-Vise environ 100 à 150 images par démo.
+Puis, pour l'image d'attente (ici la vue à 3,5 secondes) :
+
+```bash
+ffmpeg -ss 3.5 -i public/demos/mon-projet.mp4 -frames:v 1 public/demos/mon-projet.webp
+```
 
 ## Mettre le site en ligne
 
@@ -130,7 +134,7 @@ Si tu travailles directement sur `main`, le site se met à jour tout seul une mi
 ## Organisation du code
 
 ```
-public/            fichiers servis tels quels : CV, images des démos, favicon, image de partage
+public/            fichiers servis tels quels : CV, vidéos des démos, favicon, image de partage
 src/data/          tout le contenu (à modifier ici)
 src/components/    les sections de la page (Hero, Projects, Skills, Path, About, Contact, Footer…)
 src/hooks/         petits outils partagés (entrées au scroll, effet magnétique, zones de couleur)

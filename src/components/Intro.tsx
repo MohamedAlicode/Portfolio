@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import { gsap, useGSAP } from '../lib/motion'
-import { getSequence, preload } from '../lib/frames'
 import { projects } from '../data/projects'
 import { site, ui } from '../data/content'
 import { useLang } from '../lib/i18n'
@@ -8,12 +7,11 @@ import { SplitChars } from './SplitChars'
 
 const MIN_MS = 1200
 const MAX_MS = 2600
-const FIRST_FRAMES = 6
 // Deuxième visite dans la même session : l'intro est écourtée
 const REPEAT_MIN_MS = 300
 
 // Écran d'intro, comme celui d'Altaïr : le nom, un filet bronze qui suit le
-// chargement (polices et premières images de la première démo), puis le rideau
+// chargement (polices et image d'attente de la première démo), puis le rideau
 // se lève sur la page. Jamais plus de 2,6 s d'attente.
 export function Intro({ onDone }: { onDone: () => void }) {
   const { t } = useLang()
@@ -25,21 +23,24 @@ export function Intro({ onDone }: { onDone: () => void }) {
   useEffect(() => {
     const started = performance.now()
     let fontsDone = 0
-    let frames = 0
+    let posterDone = 0
     const update = () => {
-      target.current = (fontsDone + frames / FIRST_FRAMES) / 2
+      target.current = (fontsDone + posterDone) / 2
     }
-    const first = projects[0]
-    const seq = getSequence(first.slug, first.frames)
+    const poster = new Image()
+    poster.src = `${import.meta.env.BASE_URL}demos/${projects[0].slug}.webp`
     const tasks = Promise.all([
       document.fonts.ready.then(() => {
         fontsDone = 1
         update()
       }),
-      preload(seq, FIRST_FRAMES, (n) => {
-        frames = n
-        update()
-      }),
+      poster
+        .decode()
+        .catch(() => {})
+        .then(() => {
+          posterDone = 1
+          update()
+        }),
     ])
     const timeout = new Promise((r) => setTimeout(r, MAX_MS))
     let seen = false

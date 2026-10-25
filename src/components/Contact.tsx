@@ -38,7 +38,7 @@ export function Contact({ motion }: { motion: boolean }) {
   }
 
   return (
-    <section id="contact" ref={root} aria-labelledby="contact-title" className="relative overflow-hidden pt-28 pb-24 lg:pt-40 lg:pb-32">
+    <section id="contact" ref={root} aria-labelledby="contact-title" className="relative overflow-hidden pt-20 pb-20 lg:pt-28 lg:pb-28">
       <Blueprint start={drawn} />
       <div className="wrap relative">
         <p data-up className="label text-accent-ink">

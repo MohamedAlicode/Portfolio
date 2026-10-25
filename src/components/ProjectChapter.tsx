@@ -2,25 +2,23 @@ import { useCallback, useRef, type CSSProperties } from 'react'
 import type { Project } from '../data/projects'
 import { projectsUi } from '../data/content'
 import { useLang } from '../lib/i18n'
-import { clamp, gsap, ScrollTrigger, useGSAP } from '../lib/motion'
+import { gsap, useGSAP } from '../lib/motion'
 import { useSection } from '../hooks/useSection'
 import { useReveal } from '../hooks/useReveal'
 import { useMagnetic } from '../hooks/useMagnetic'
-import { FilmCanvas } from './FilmCanvas'
+import { DemoVideo } from './DemoVideo'
 import { Counter } from './Counter'
 
 type Entrance = 'slide' | 'curtain' | 'rise'
 type Props = { project: Project; index: number; total: number; motion: boolean; entrance: Entrance; flip?: boolean }
 
-// Un projet = un moment à l'écran. Le chapitre reste épinglé pendant que la
-// démo se rejoue au scroll ; ses « temps » s'allument au fil du film, comme la
-// liste de l'anatomie d'Altaïr. Viennent ensuite les chiffres, la stack et les liens.
+// Un projet : la démo tourne en boucle à côté de ses « temps », qui s'allument
+// au fil de la vidéo comme la liste de l'anatomie d'Altaïr. Viennent ensuite
+// les chiffres, la stack et les liens.
 export function ProjectChapter({ project, index, total, motion, entrance, flip }: Props) {
   const { t, lang } = useLang()
   const root = useRef<HTMLElement>(null)
-  const pin = useRef<HTMLDivElement>(null)
-  // Sans animations, la démo reste figée sur une image représentative (le 2e temps)
-  const progress = useRef(motion ? 0 : (project.beats[1]?.from ?? 0) / (project.frames - 1))
+  const stage = useRef<HTMLDivElement>(null)
   const demoBtn = useRef<HTMLAnchorElement>(null)
   const codeBtn = useRef<HTMLAnchorElement>(null)
   useMagnetic(demoBtn)
@@ -28,28 +26,12 @@ export function ProjectChapter({ project, index, total, motion, entrance, flip }
   useSection(root, project.zone, { id: project.slug, num: index + 1 })
   useReveal(root, motion, [lang])
 
-  // Le scroll pilote le film ; un temps de pause au début et à la fin
-  useGSAP(
-    () => {
-      if (!motion) return
-      ScrollTrigger.create({
-        trigger: pin.current,
-        start: 'top top',
-        end: 'bottom bottom',
-        onUpdate: (self) => {
-          progress.current = clamp((self.progress - 0.06) / 0.84)
-        },
-      })
-    },
-    { scope: root, dependencies: [motion] },
-  )
-
   // Entrée du chapitre : chaque projet a la sienne (glissé, rideau, montée).
   // Préparée seulement quand le chapitre approche (rien à calculer au
   // chargement), jouée aux trois quarts de l'écran, rembobinée si on remonte.
   useGSAP(
     (_, contextSafe) => {
-      const el = pin.current
+      const el = stage.current
       if (!motion || !el || !contextSafe) return
       let tl: gsap.core.Timeline | null = null
       const build = contextSafe(() => {
@@ -98,102 +80,52 @@ export function ProjectChapter({ project, index, total, motion, entrance, flip }
     { scope: root, dependencies: [motion, lang], revertOnUpdate: true },
   )
 
-  // Les « temps » s'allument quand le film atteint leur image
-  const onFrame = useCallback(
-    (frame: number) => {
-      const el = root.current
-      if (!el) return
-      let active = 0
-      project.beats.forEach((b, i) => {
-        if (frame >= b.from) active = i
-      })
-      el.querySelectorAll<HTMLElement>('[data-beat]').forEach((li, i) => {
-        li.toggleAttribute('data-active', i === active)
-        li.toggleAttribute('data-past', i < active)
-      })
-      const bar = el.querySelector<HTMLElement>('[data-progress]')
-      if (bar) bar.style.transform = `scaleX(${(frame / (project.frames - 1)).toFixed(3)})`
-    },
-    [project],
-  )
+  // Les « temps » s'allument au fil de la vidéo
+  const onBeat = useCallback((active: number) => {
+    root.current?.querySelectorAll<HTMLElement>('[data-beat]').forEach((li, i) => {
+      li.toggleAttribute('data-active', i === active)
+      li.toggleAttribute('data-past', i < active)
+    })
+  }, [])
 
   const titleId = `${project.slug}-title`
 
   return (
     <article id={project.slug} ref={root} aria-labelledby={titleId} className="relative">
-      <div ref={pin} className={`relative ${motion ? 'h-[280vh] lg:h-[330vh]' : ''}`}>
-        <div className={`${motion ? 'sticky top-0 h-svh' : 'min-h-svh py-20'} flex items-center lg:pt-16`}>
-          <div className="wrap grid items-center gap-8 lg:grid-cols-12 lg:gap-14">
-            <figure
-              data-film
-              data-cursor={t(projectsUi.openDemo)}
-              className={`relative m-0 min-w-0 lg:col-span-7 ${flip ? 'lg:order-2' : ''}`}
-            >
-              <div className="overflow-hidden rounded-[14px] border border-line bg-surface shadow-[0_30px_80px_-40px_rgba(10,26,42,0.55)]">
-                <div className="flex items-center gap-2 border-b border-line px-4 py-2.5">
-                  <span className="h-2.5 w-2.5 rounded-full bg-line" />
-                  <span className="h-2.5 w-2.5 rounded-full bg-line" />
-                  <span className="h-2.5 w-2.5 rounded-full bg-line" />
-                  <span className="ml-3 truncate text-[12px] text-muted">{project.url}</span>
-                </div>
-                <FilmCanvas project={project} progress={progress} onFrame={onFrame} label={t(project.poster)} />
-              </div>
-              {/* Toute la démo est cliquable */}
-              <a
-                href={project.demo}
-                target="_blank"
-                rel="noopener"
-                className="absolute inset-0 rounded-[14px]"
-                aria-label={`${t(projectsUi.openDemo)} : ${project.name} (${t(projectsUi.newTab)})`}
-              />
-              <div className="mt-3 flex items-center gap-4">
-                <span className="relative block h-px flex-1 overflow-hidden bg-line">
-                  <span data-progress className="absolute inset-0 origin-left bg-accent" style={{ transform: 'scaleX(0)' }} />
-                </span>
-                <span className="label text-[11px] text-muted">{t(projectsUi.scrollHint)}</span>
-              </div>
-            </figure>
+      <div ref={stage} className="wrap grid items-center gap-8 pt-16 lg:grid-cols-12 lg:gap-14 lg:pt-24">
+        <DemoVideo project={project} motion={motion} flip={flip} onBeat={onBeat} />
 
-            <div className="min-w-0 lg:col-span-5">
-              <p data-kid className="label flex gap-3 text-muted">
-                <span className="tabular-nums text-accent-ink">
-                  {String(index + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
+        <div className="min-w-0 lg:col-span-5">
+          <p data-kid className="label flex gap-3 text-muted">
+            <span className="tabular-nums text-accent-ink">
+              {String(index + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
+            </span>
+            <span>{t(project.kind)}</span>
+          </p>
+          <h3 id={titleId} data-kid className="mt-3 font-display text-[clamp(44px,6vw,92px)] leading-[0.95] font-normal tracking-[-0.02em]">
+            {project.name}
+          </h3>
+          <Intro project={project} />
+          <ol data-kid className="beats mt-6 border-t border-line lg:mt-7">
+            {project.beats.map((b, i) => (
+              <li
+                key={i}
+                data-beat
+                {...(i === Math.min(1, project.beats.length - 1) ? { 'data-active': '' } : {})}
+                className="beat grid grid-cols-[2.2rem_1fr] border-b border-line py-3"
+              >
+                <span className="label pt-[3px] tabular-nums text-accent-ink">{String(i + 1).padStart(2, '0')}</span>
+                <span>
+                  <span className="block font-medium">{t(b.title)}</span>
+                  <span className="beat-text block text-[14.5px] leading-[1.5] text-muted">{t(b.text)}</span>
                 </span>
-                <span>{t(project.kind)}</span>
-              </p>
-              <h3 id={titleId} data-kid className="mt-3 font-display text-[clamp(44px,min(6vw,10svh),92px)] leading-[0.95] font-normal tracking-[-0.02em]">
-                {project.name}
-              </h3>
-              <div className={motion ? 'hidden lg:block' : ''}>
-                <Intro project={project} />
-              </div>
-              <ol data-kid className="beats mt-6 border-t border-line lg:mt-7">
-                {project.beats.map((b, i) => (
-                  <li
-                    key={i}
-                    data-beat
-                    {...(i === 0 ? { 'data-active': '' } : {})}
-                    className="beat grid grid-cols-[2.2rem_1fr] border-b border-line py-3"
-                  >
-                    <span className="label pt-[3px] tabular-nums text-accent-ink">{String(i + 1).padStart(2, '0')}</span>
-                    <span>
-                      <span className="block font-medium">{t(b.title)}</span>
-                      <span className="beat-text block text-[14.5px] leading-[1.5] text-muted">{t(b.text)}</span>
-                    </span>
-                  </li>
-                ))}
-              </ol>
-            </div>
-          </div>
+              </li>
+            ))}
+          </ol>
         </div>
       </div>
 
-      <div data-details className="wrap grid gap-12 pt-6 pb-28 lg:grid-cols-12 lg:gap-14 lg:pb-40">
-        {motion && (
-          <div data-up style={{ '--d': 0 } as CSSProperties} className="lg:hidden">
-            <Intro project={project} />
-          </div>
-        )}
+      <div data-details className="wrap grid gap-12 pt-12 pb-16 lg:grid-cols-12 lg:gap-14 lg:pt-14 lg:pb-24">
         <dl className="grid grid-cols-3 gap-4 lg:col-span-7">
           {project.facts.map((f, i) => (
             <div data-up style={{ '--d': 1 + i } as CSSProperties} key={i} className="min-w-0 border-t border-line pt-5">

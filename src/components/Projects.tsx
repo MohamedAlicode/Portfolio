@@ -10,7 +10,7 @@ export function Projects({ motion, count = projects.length }: { motion: boolean;
   return (
     <section id="projets" aria-labelledby="projets-title">
       {/* Avec les animations, ce titre est montré par le cercle du hero */}
-      <div className={motion ? 'sr-only' : 'wrap pt-28'}>
+      <div className={motion ? 'sr-only' : 'wrap pt-20'}>
         <p className="label text-accent-ink">{t(projectsUi.kicker)}</p>
         <h2 id="projets-title" className="mt-6 max-w-[16ch] font-display text-[clamp(44px,7vw,110px)] leading-[0.95] font-normal">
           {t(projectsUi.title)}

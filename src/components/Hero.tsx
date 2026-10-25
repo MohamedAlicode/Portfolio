@@ -102,7 +102,7 @@ export function Hero({ ready, motion }: { ready: boolean; motion: boolean }) {
       ref={root}
       aria-labelledby="hero-title"
       className="relative"
-      style={{ height: motion ? '260vh' : undefined }}
+      style={{ height: motion ? '210vh' : undefined }}
     >
       <div data-sticky className={`${motion ? 'sticky top-0 h-svh' : 'relative min-h-svh'} overflow-hidden`}>
         <Blueprint start={ready} />
@@ -195,12 +195,13 @@ export function Hero({ ready, motion }: { ready: boolean; motion: boolean }) {
           </dl>
         </div>
 
-        {/* Le cercle qui s'ouvre sur les projets (le vrai titre de section est dans Projets) */}
+        {/* Le cercle qui s'ouvre sur les projets (le vrai titre de section est dans Projets).
+            Le texte est calé en bas : le premier projet arrive juste après. */}
         {motion && (
           <div
             data-portal
             aria-hidden="true"
-            className="tone-paper absolute inset-0 flex items-center bg-bg text-fg"
+            className="tone-paper absolute inset-0 flex items-end bg-bg pb-14 text-fg lg:pb-16"
             style={{ clipPath: 'circle(0% at 50% 58%)' }}
           >
             <div className="wrap">

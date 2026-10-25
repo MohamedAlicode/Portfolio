@@ -1,18 +1,17 @@
 import type { Localized } from './content'
 import type { Zone } from '../lib/chapters'
 
-// Les trois projets. Chaque démo (GIF du dépôt) est découpée en images
-// dans public/frames/<slug>/ et rejouée au rythme du scroll.
-// Les « temps » (beats) s'allument quand le film atteint leur image de départ.
+// Les trois projets. Chaque démo (le GIF du dépôt, converti en vidéo) est
+// dans public/demos/<slug>.mp4, avec son image d'attente <slug>.webp.
+// Les « temps » (beats) s'allument quand la vidéo atteint leur seconde de départ.
 
-export type Beat = { from: number; title: Localized; text: Localized }
+export type Beat = { at: number; title: Localized; text: Localized } // at : en secondes
 export type Fact = { value: number; prefix?: string; suffix?: Localized; label: Localized }
 
 export type Project = {
   slug: string
   name: string
-  frames: number
-  ratio: number // largeur / hauteur des images
+  ratio: number // largeur / hauteur de la vidéo
   zone: Zone
   kind: Localized
   hook: Localized
@@ -25,7 +24,7 @@ export type Project = {
   code: string
   demoNote?: Localized
   url: string // adresse affichée dans la barre du navigateur
-  poster: Localized // description de la démo pour les lecteurs d'écran
+  alt: Localized // description de la démo pour les lecteurs d'écran
 }
 
 const role: Localized = {
@@ -37,7 +36,6 @@ export const projects: Project[] = [
   {
     slug: 'maison-cadran',
     name: 'Maison Cadran',
-    frames: 116,
     ratio: 800 / 500,
     zone: 'paper',
     kind: { fr: 'E-commerce sur mesure', en: 'Custom e-commerce' },
@@ -52,7 +50,7 @@ export const projects: Project[] = [
     },
     beats: [
       {
-        from: 0,
+        at: 0,
         title: { fr: 'Accueil', en: 'Home' },
         text: {
           fr: 'Pages prérendues au build avec Next.js 16, lectures en base mises en cache.',
@@ -60,7 +58,7 @@ export const projects: Project[] = [
         },
       },
       {
-        from: 27,
+        at: 3.5,
         title: { fr: 'Catalogue', en: 'Catalogue' },
         text: {
           fr: '9 filtres combinables avec le nombre de résultats sur chaque option. Tout l’état vit dans l’URL : une recherche se partage.',
@@ -68,7 +66,7 @@ export const projects: Project[] = [
         },
       },
       {
-        from: 54,
+        at: 9.33,
         title: { fr: 'Fiche produit', en: 'Product page' },
         text: {
           fr: 'Galerie avec zoom, stock et délai, caractéristiques, avis, montres similaires, données structurées pour le SEO.',
@@ -76,7 +74,7 @@ export const projects: Project[] = [
         },
       },
       {
-        from: 84,
+        at: 14.33,
         title: { fr: 'Panier et paiement', en: 'Cart and checkout' },
         text: {
           fr: 'Codes promo, Stripe Checkout, webhook idempotent, facture PDF, comptes par lien magique et back-office.',
@@ -97,7 +95,7 @@ export const projects: Project[] = [
     demo: 'https://maison-cadran.vercel.app',
     code: 'https://github.com/MohamedAlicode/Maison-Cadran',
     url: 'maison-cadran.vercel.app',
-    poster: {
+    alt: {
       fr: 'Démo de Maison Cadran : accueil, catalogue filtré, fiche produit avec galerie, ajout au panier.',
       en: 'Maison Cadran demo: home page, filtered catalogue, product page with gallery, add to cart.',
     },
@@ -105,8 +103,7 @@ export const projects: Project[] = [
   {
     slug: 'altair',
     name: 'Altaïr',
-    frames: 157,
-    ratio: 800 / 450,
+    ratio: 960 / 540,
     zone: 'paper',
     kind: { fr: 'Landing page scrollytelling', en: 'Scrollytelling landing page' },
     hook: {
@@ -120,7 +117,7 @@ export const projects: Project[] = [
     },
     beats: [
       {
-        from: 0,
+        at: 0,
         title: { fr: 'Écran d’intro', en: 'Intro screen' },
         text: {
           fr: 'Une nuit étoilée couvre le chargement : la page s’ouvre dès que les 24 premières images sont arrivées.',
@@ -128,7 +125,7 @@ export const projects: Project[] = [
         },
       },
       {
-        from: 22,
+        at: 4.4,
         title: { fr: 'Le film', en: 'The film' },
         text: {
           fr: 'La vidéo est découpée en 287 images WebP, décodées hors du fil principal et dessinées sur un canvas.',
@@ -136,7 +133,7 @@ export const projects: Project[] = [
         },
       },
       {
-        from: 62,
+        at: 12.5,
         title: { fr: 'Les chapitres', en: 'The chapters' },
         text: {
           fr: 'Chaque section a son entrée (glissé, rotation, rideau, zoom) orchestrée avec GSAP et ScrollTrigger.',
@@ -144,7 +141,7 @@ export const projects: Project[] = [
         },
       },
       {
-        from: 100,
+        at: 20.1,
         title: { fr: 'Zones de couleur', en: 'Colour zones' },
         text: {
           fr: 'Calques cognac et nuit, compteurs animés, bascule FR / EN sans recharger ni interrompre la visite.',
@@ -161,7 +158,7 @@ export const projects: Project[] = [
     demo: 'https://mohamedalicode.github.io/landing-page-althaire/',
     code: 'https://github.com/MohamedAlicode/landing-page-althaire',
     url: 'mohamedalicode.github.io',
-    poster: {
+    alt: {
       fr: 'Démo d’Altaïr : écran d’intro étoilé, puis le flacon et son coffret qui s’ouvrent et se démontent au fil des chapitres.',
       en: 'Altaïr demo: starry intro screen, then the bottle and its box opening and coming apart chapter by chapter.',
     },
@@ -169,8 +166,7 @@ export const projects: Project[] = [
   {
     slug: 'quiz-live',
     name: 'Quiz Live',
-    frames: 112,
-    ratio: 800 / 394,
+    ratio: 940 / 462,
     zone: 'deep',
     kind: { fr: 'Application temps réel', en: 'Real-time app' },
     hook: {
@@ -180,7 +176,7 @@ export const projects: Project[] = [
     role,
     beats: [
       {
-        from: 0,
+        at: 0,
         title: { fr: 'Lobby', en: 'Lobby' },
         text: {
           fr: 'Un code à 6 chiffres ou un QR code, et les joueurs arrivent sans créer de compte.',
@@ -188,7 +184,7 @@ export const projects: Project[] = [
         },
       },
       {
-        from: 30,
+        at: 6.67,
         title: { fr: 'Question', en: 'Question' },
         text: {
           fr: 'Horloge synchronisée : tous les écrans affichent le même compte à rebours, même si l’heure d’un téléphone est fausse.',
@@ -196,7 +192,7 @@ export const projects: Project[] = [
         },
       },
       {
-        from: 60,
+        at: 13.33,
         title: { fr: 'Résultats', en: 'Results' },
         text: {
           fr: 'Le serveur est la seule source de vérité : il note les réponses, et la bonne n’est jamais envoyée avant la fin.',
@@ -204,7 +200,7 @@ export const projects: Project[] = [
         },
       },
       {
-        from: 78,
+        at: 17.33,
         title: { fr: 'Podium', en: 'Podium' },
         text: {
           fr: 'Timeline GSAP et canvas-confetti, sons générés avec la Web Audio API, reconnexion automatique des joueurs.',
@@ -225,7 +221,7 @@ export const projects: Project[] = [
       en: 'Free hosting: the first visit can take about thirty seconds.',
     },
     url: 'quiz-live-hk3r.onrender.com',
-    poster: {
+    alt: {
       fr: 'Démo de Quiz Live : lobby avec code, compte à rebours, question sur l’écran et le téléphone, résultats, podium avec confettis.',
       en: 'Quiz Live demo: lobby with code, countdown, question on screen and phone, results, podium with confetti.',
     },

@@ -34,7 +34,7 @@ export function About({ motion }: { motion: boolean }) {
   let rank = 0
 
   return (
-    <section id="a-propos" ref={root} aria-labelledby="a-propos-title" className="relative py-28 lg:py-44">
+    <section id="a-propos" ref={root} aria-labelledby="a-propos-title" className="relative py-20 lg:py-32">
       <div className="wrap grid gap-10 lg:grid-cols-12 lg:gap-x-14 lg:gap-y-10">
         <h2 id="a-propos-title" data-up className="label text-accent-ink lg:col-span-3">
           {t(about.kicker)}

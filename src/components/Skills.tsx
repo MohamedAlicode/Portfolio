@@ -21,9 +21,9 @@ export function Skills({ motion }: { motion: boolean }) {
   }
 
   return (
-    <section id="competences" ref={root} aria-labelledby="competences-title" className="relative pb-28 lg:pb-40">
+    <section id="competences" ref={root} aria-labelledby="competences-title" className="relative pb-20 lg:pb-28">
       <Marquee motion={motion} />
-      <div className="wrap grid gap-12 pt-24 lg:grid-cols-12 lg:gap-14 lg:pt-32">
+      <div className="wrap grid gap-12 pt-20 lg:grid-cols-12 lg:gap-14 lg:pt-24">
         <header className="lg:col-span-4">
           <div className="lg:sticky lg:top-28">
             <p data-up className="label text-accent-ink">
