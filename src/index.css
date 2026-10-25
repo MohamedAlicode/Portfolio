@@ -1,0 +1,251 @@
+@import '@fontsource/instrument-serif/400.css';
+@import '@fontsource/instrument-serif/400-italic.css';
+@import '@fontsource-variable/geist';
+@import 'tailwindcss';
+
+/*
+  Palette « Plan bronze » : encre marine, papier ivoire, touche de bronze.
+  #0A1A2A encre · #17324A surfaces · #2B556E texte secondaire · #B08D57 bronze · #F2EDE3 papier
+
+  Le site change de « zone » de couleur au fil du scroll (comme Altaïr) :
+  <html data-zone="base | paper | deep">. Les couleurs sont des propriétés
+  enregistrées (@property), donc elles s'animent d'une zone à l'autre.
+*/
+
+@property --bg { syntax: '<color>'; inherits: true; initial-value: #0a1a2a; }
+@property --fg { syntax: '<color>'; inherits: true; initial-value: #f2ede3; }
+@property --muted { syntax: '<color>'; inherits: true; initial-value: #a3b4c3; }
+@property --line { syntax: '<color>'; inherits: true; initial-value: #2b556e; }
+@property --surface { syntax: '<color>'; inherits: true; initial-value: #17324a; }
+@property --accent-ink { syntax: '<color>'; inherits: true; initial-value: #c9a56e; }
+
+:root {
+  --accent: #b08d57;
+  --on-accent: #0a1a2a;
+  --ink: #0a1a2a;
+  --paper: #f2ede3;
+
+  /* Zone « base », thème sombre (par défaut) */
+  --bg: #0a1a2a;
+  --fg: #f2ede3;
+  --muted: #a3b4c3;
+  --line: #22405c;
+  --surface: #11263b;
+  --accent-ink: #c9a56e;
+
+  color-scheme: dark;
+  transition:
+    --bg 0.9s cubic-bezier(0.65, 0, 0.35, 1),
+    --fg 0.9s cubic-bezier(0.65, 0, 0.35, 1),
+    --muted 0.9s cubic-bezier(0.65, 0, 0.35, 1),
+    --line 0.9s cubic-bezier(0.65, 0, 0.35, 1),
+    --surface 0.9s cubic-bezier(0.65, 0, 0.35, 1),
+    --accent-ink 0.9s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* Valeurs des zones, regroupées en classes pour pouvoir les poser localement */
+:root[data-zone='paper'],
+.tone-paper {
+  --bg: #f2ede3;
+  --fg: #0a1a2a;
+  --muted: #2b556e;
+  --line: #d8cfbe;
+  --surface: #e8e1d3;
+  --accent-ink: #7a5c2e;
+  color-scheme: light;
+}
+:root[data-zone='deep'],
+.tone-deep {
+  --bg: #17324a;
+  --fg: #f2ede3;
+  --muted: #b4c3cf;
+  --line: #2b556e;
+  --surface: #1e3d58;
+  --accent-ink: #cdaa72;
+  color-scheme: dark;
+}
+
+/* Thème clair : la zone de base devient le papier, la zone « papier » devient l'encre */
+:root[data-scheme='light'] {
+  --bg: #f2ede3;
+  --fg: #0a1a2a;
+  --muted: #2b556e;
+  --line: #d8cfbe;
+  --surface: #e8e1d3;
+  --accent-ink: #7a5c2e;
+  color-scheme: light;
+}
+:root[data-scheme='light'][data-zone='paper'],
+:root[data-scheme='light'] .tone-paper {
+  --bg: #0a1a2a;
+  --fg: #f2ede3;
+  --muted: #a3b4c3;
+  --line: #22405c;
+  --surface: #11263b;
+  --accent-ink: #c9a56e;
+  color-scheme: dark;
+}
+:root[data-scheme='light'][data-zone='deep'],
+:root[data-scheme='light'] .tone-deep {
+  --bg: #e8e1d3;
+  --fg: #0a1a2a;
+  --muted: #2b556e;
+  --line: #d2c7b3;
+  --surface: #ded5c3;
+  --accent-ink: #7a5c2e;
+  color-scheme: light;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-surface: var(--surface);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-on-accent: var(--on-accent);
+  --font-display: 'Instrument Serif', 'Iowan Old Style', Georgia, serif;
+  --font-sans: 'Geist Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: clip;
+  }
+  ::selection {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+}
+
+/* Lenis */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+@layer components {
+  .wrap {
+    width: 100%;
+    max-width: 1320px;
+    margin-inline: auto;
+    padding-left: max(20px, env(safe-area-inset-left, 0px));
+    padding-right: max(20px, env(safe-area-inset-right, 0px));
+  }
+  @media (min-width: 768px) {
+    .wrap {
+      padding-left: max(48px, env(safe-area-inset-left, 0px));
+      padding-right: max(48px, env(safe-area-inset-right, 0px));
+    }
+  }
+
+  /* Petites étiquettes en capitales */
+  .label {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 24px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+    transition:
+      background-color 0.3s,
+      color 0.3s,
+      border-color 0.3s;
+    will-change: transform;
+  }
+  .btn:hover {
+    border-color: var(--fg);
+  }
+  .btn-primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--on-accent);
+  }
+  .btn-primary:hover {
+    background: var(--fg);
+    border-color: var(--fg);
+    color: var(--bg);
+  }
+  .btn .arrow {
+    transition: transform 0.3s;
+  }
+  .btn:hover .arrow {
+    transform: translateX(3px);
+  }
+
+  /* Masques pour le texte découpé */
+  .split-line,
+  .char-mask {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+    padding-bottom: 0.08em;
+    margin-bottom: -0.08em;
+  }
+  .split-line {
+    display: block;
+  }
+  .char {
+    display: inline-block;
+    will-change: transform;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    transition: none;
+  }
+  .btn,
+  .btn .arrow {
+    transition: none;
+  }
+}
+
+/* Indicateur « Défiler » sous le hero */
+@keyframes scroll-cue {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(200%); }
+}
+.scroll-cue {
+  animation: scroll-cue 1.8s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cue { animation: none; }
+}

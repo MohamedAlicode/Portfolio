@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="fr" data-scheme="dark" data-zone="base">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Mohamed Ali Ouachani · Développeur web full-stack</title>
+    <meta name="description" content="Portfolio de Mohamed Ali Ouachani, développeur web full-stack à Paris (React, Next.js, TypeScript, Node.js, PostgreSQL). Trois projets à découvrir : Maison Cadran, Altaïr, Quiz Live." />
+    <meta name="theme-color" content="#0a1a2a" />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <script>
+      // Thème mémorisé, posé avant l'affichage pour éviter un flash
+      try {
+        if (localStorage.getItem('theme') === 'light') document.documentElement.dataset.scheme = 'light'
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
