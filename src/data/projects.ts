@@ -83,13 +83,9 @@ export const projects: Project[] = [
       },
     ],
     facts: [
-      { value: 19, label: { fr: 'montres en catalogue', en: 'watches in the catalogue' } },
-      { value: 9, label: { fr: 'filtres combinables', en: 'combinable filters' } },
-      {
-        value: 2000,
-        suffix: { fr: ' €', en: ' €' },
-        label: { fr: 'prix maximum, stocké en centimes', en: 'top price, stored in cents' },
-      },
+      { value: 60, label: { fr: 'tests automatisés (prix, panier, commandes…)', en: 'automated tests (pricing, cart, orders…)' } },
+      { value: 7, label: { fr: 'rubriques dans le back-office', en: 'sections in the admin back office' } },
+      { value: 7, label: { fr: 'étapes livrées en pull request, vérifiées par la CI', en: 'stages shipped as pull requests, checked by CI' } },
     ],
     stack: ['Next.js 16', 'React 19', 'TypeScript', 'Tailwind 4', 'PostgreSQL', 'Prisma 7', 'Stripe', 'Auth.js', 'Resend', 'Vitest', 'GitHub Actions'],
     demo: 'https://maison-cadran.vercel.app',
@@ -152,7 +148,7 @@ export const projects: Project[] = [
     facts: [
       { value: 287, label: { fr: 'images rejouées sur canvas', en: 'frames replayed on canvas' } },
       { value: 48, suffix: { fr: ' i/s', en: ' fps' }, label: { fr: 'interpolées depuis 24', en: 'interpolated from 24' } },
-      { value: 2, label: { fr: 'langues, sans rechargement', en: 'languages, no reload' } },
+      { value: 340, suffix: { fr: ' Ko', en: ' KB' }, label: { fr: 'environ pour ouvrir la page sur mobile', en: 'or so to open the page on mobile' } },
     ],
     stack: ['HTML', 'CSS', 'JavaScript', 'Canvas 2D', 'GSAP', 'ScrollTrigger', 'Lenis', 'ffmpeg'],
     demo: 'https://mohamedalicode.github.io/landing-page-althaire/',
@@ -209,9 +205,9 @@ export const projects: Project[] = [
       },
     ],
     facts: [
-      { value: 6, label: { fr: 'chiffres pour rejoindre', en: 'digits to join' } },
-      { value: 3, label: { fr: 'paquets : web, serveur, code partagé', en: 'packages: web, server, shared code' } },
-      { value: 18, label: { fr: 'fichiers de tests Vitest', en: 'Vitest test files' } },
+      { value: 131, label: { fr: 'tests automatisés (Vitest)', en: 'automated tests (Vitest)' } },
+      { value: 63, label: { fr: 'pays dans les quiz prêts à jouer', en: 'countries in the ready-to-play quizzes' } },
+      { value: 0, label: { fr: 'compte à créer pour les joueurs', en: 'accounts needed to join as a player' } },
     ],
     stack: ['React 19', 'Vite', 'Zustand', 'Node.js', 'Express 5', 'Socket.IO', 'PostgreSQL', 'Prisma', 'Zod', 'Framer Motion', 'GSAP', 'Docker'],
     demo: 'https://quiz-live-hk3r.onrender.com',

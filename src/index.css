@@ -304,6 +304,32 @@ html.lenis body {
   }
 }
 
+/* Variante à petites cartes (compétences) : plusieurs visibles à la fois */
+.carousel-cards {
+  --w: min(420px, 82vw);
+}
+@media (min-width: 768px) {
+  .carousel-cards {
+    --w: min(420px, 46vw);
+  }
+}
+.skill-card {
+  transition:
+    opacity 0.6s,
+    border-color 0.6s;
+}
+.skill-slide:not([data-center]) .skill-card {
+  opacity: 0.5;
+}
+.skill-slide[data-center] .skill-card {
+  border-color: var(--accent);
+}
+@media (hover: hover) {
+  .skill-slide:not([data-center]):hover .skill-card {
+    opacity: 0.8;
+  }
+}
+
 /* Flèches et bouton Pause : ronds, à bordure fine */
 .carousel-btn {
   display: inline-flex;
@@ -348,6 +374,17 @@ html.lenis body {
 .carousel-dot[aria-current] {
   width: 44px;
 }
+@media (max-width: 479px) {
+  .carousel-dot {
+    width: 22px;
+  }
+  .carousel-dot[aria-current] {
+    width: 38px;
+  }
+  .carousel-dot[aria-current] > span {
+    width: 26px;
+  }
+}
 .carousel-dot[aria-current] > span {
   width: 30px;
   background: var(--line);
@@ -383,26 +420,6 @@ html.lenis body {
   .project-details,
   .project-details[data-active] {
     transition: none;
-  }
-}
-
-/* Lignes de compétences : filet bronze et nom qui glisse au survol */
-.skill-fill {
-  transform: scaleX(0);
-}
-.skill-fill,
-.skill-name {
-  transition:
-    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
-    color 0.4s;
-}
-@media (hover: hover) {
-  .skill:hover .skill-fill {
-    transform: scaleX(1);
-  }
-  .skill:hover .skill-name {
-    transform: translateX(10px);
-    color: var(--accent-ink);
   }
 }
 
@@ -443,8 +460,7 @@ html.lenis body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .skill-fill,
-  .skill-name,
+  .skill-card,
   .entry-dot,
   .entry-body *,
   .mail-link {

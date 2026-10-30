@@ -140,10 +140,15 @@ export const skills = {
     en: ['What I use,', 'and *where*', 'I used it.'],
   },
   intro: {
-    fr: 'Pas de barres de pourcentage : chaque domaine renvoie aux projets ou aux postes où je l’ai mis en pratique.',
-    en: 'No percentage bars: each area points to the projects or jobs where I put it into practice.',
+    fr: 'Pas de barres de pourcentage : chaque domaine renvoie aux projets ou aux postes où je l’ai mis en pratique. Les cartes défilent toutes seules, ou à la main.',
+    en: 'No percentage bars: each area points to the projects or jobs where I put it into practice. The cards scroll on their own, or by hand.',
   },
   proofLabel: { fr: 'Vu dans', en: 'Used in' },
+  // Carrousel
+  carousel: { fr: 'Carrousel des compétences', en: 'Skills carousel' },
+  slide: { fr: 'domaine', en: 'area' },
+  prev: { fr: 'Domaine précédent', en: 'Previous area' },
+  next: { fr: 'Domaine suivant', en: 'Next area' },
   groups: [
     {
       name: { fr: 'Front-end', en: 'Front-end' },
