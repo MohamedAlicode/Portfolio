@@ -2,6 +2,7 @@ import { useRef, type MouseEvent } from 'react'
 import { proofs, skills } from '../data/content'
 import { useLang } from '../lib/i18n'
 import { scrollToHash } from '../lib/scroll'
+import { showProject } from '../lib/showcase'
 import { useSection } from '../hooks/useSection'
 import { useReveal } from '../hooks/useReveal'
 import { Marquee } from './Marquee'
@@ -15,8 +16,9 @@ export function Skills({ motion }: { motion: boolean }) {
   useSection(root, 'base', { id: 'competences', num: 4 })
   useReveal(root, motion, [lang])
 
-  const go = (e: MouseEvent<HTMLAnchorElement>, hash: string) => {
+  const go = (e: MouseEvent<HTMLAnchorElement>, hash: string, project?: string) => {
     e.preventDefault()
+    if (project) showProject(project)
     scrollToHash(hash)
   }
 
@@ -68,7 +70,7 @@ export function Skills({ motion }: { motion: boolean }) {
                       <a
                         key={p}
                         href={proofs[p].href}
-                        onClick={(e) => go(e, proofs[p].href)}
+                        onClick={(e) => go(e, proofs[p].href, proofs[p].project)}
                         className="rounded-[4px] border border-line px-2 py-0.5 transition-colors hover:border-accent hover:text-fg"
                       >
                         {proofs[p].name}

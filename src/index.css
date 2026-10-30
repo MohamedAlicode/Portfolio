@@ -249,38 +249,140 @@ html.lenis body {
   .scroll-cue { animation: none; }
 }
 
-/* « Temps » des projets : celui en cours est allumé. Les autres passent en
-   couleur secondaire (pas en transparence : le texte reste assez contrasté) */
-.beat,
-.beat * {
-  transition: color 0.5s ease;
+/* Carrousel des projets (Projects.tsx) : la carte du milieu fait --w de
+   large, ses voisines sont posées à côté, à --gap d'écart. Chaque carte se
+   place avec --o (son rang par rapport au milieu) et --drag (le glissé en cours). */
+.carousel {
+  --w: min(1100px, 86vw);
+  --gap: 12px;
+  --drag: 0px;
 }
-[data-motion] .beat:not([data-active]),
-[data-motion] .beat:not([data-active]) * {
-  color: var(--muted);
+@media (min-width: 768px) {
+  .carousel {
+    --w: min(1100px, 74vw);
+    --gap: 20px;
+  }
 }
-/* Repère bronze à gauche du temps en cours (dessiné, sans décaler la mise en page) */
-[data-motion] .beat {
+.carousel-size {
+  width: var(--w);
+  aspect-ratio: 16 / 9;
+}
+.carousel-slide {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: var(--w);
+  height: 100%;
+  transform: translateX(calc(-50% + var(--o) * (var(--w) + var(--gap)) + var(--drag)));
+  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.carousel-slide:not([data-center]) {
+  cursor: pointer;
+}
+.carousel[data-dragging] .carousel-slide {
+  transition: none;
+  cursor: grabbing;
+}
+/* Les voisines sont assombries, leur légende s'efface */
+.carousel-veil {
+  opacity: 0.45;
+  transition: opacity 0.6s;
+}
+.carousel-slide[data-center] .carousel-veil {
+  opacity: 0;
+}
+.carousel-caption {
+  opacity: 0.55;
+  transition: opacity 0.6s;
+}
+.carousel-slide[data-center] .carousel-caption {
+  opacity: 1;
+}
+@media (hover: hover) {
+  .carousel-slide:not([data-center]):hover .carousel-veil {
+    opacity: 0.25;
+  }
+}
+
+/* Flèches et bouton Pause : ronds, à bordure fine */
+.carousel-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  color: var(--fg);
+  transition:
+    border-color 0.3s,
+    background-color 0.3s;
+}
+.carousel-btn:hover {
+  border-color: var(--fg);
+}
+/* Points : le point actif s'allonge et se remplit de bronze au fil du minuteur
+   (--fill, de 0 à 1). La zone cliquable fait 32 px de large. */
+.carousel-dot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 44px;
+}
+.carousel-dot > span {
   position: relative;
+  display: block;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--muted);
+  overflow: hidden;
+  transition:
+    width 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.3s;
 }
-[data-motion] .beat::before {
+.carousel-dot:hover > span {
+  background: var(--fg);
+}
+.carousel-dot[aria-current] {
+  width: 44px;
+}
+.carousel-dot[aria-current] > span {
+  width: 30px;
+  background: var(--line);
+}
+.carousel-dot[aria-current] > span::after {
   content: '';
   position: absolute;
-  top: 14px;
-  bottom: 14px;
-  left: -14px;
-  width: 2px;
+  inset: 0;
   background: var(--accent);
-  transform: scaleY(0);
-  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: scaleX(var(--fill, 0));
+  transform-origin: 0 50%;
 }
-[data-motion] .beat[data-active]::before {
-  transform: scaleY(1);
+
+/* Fiche du projet affiché : les autres sont empilées dessous, invisibles */
+.project-details {
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.5s,
+    visibility 0s 0.5s;
 }
-/* Sur mobile, pas de place dans la marge pour le repère : la couleur suffit */
-@media (max-width: 1023px) {
-  [data-motion] .beat::before {
-    display: none;
+.project-details[data-active] {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.6s 0.15s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .carousel-slide,
+  .carousel-veil,
+  .carousel-caption,
+  .carousel-dot > span,
+  .project-details,
+  .project-details[data-active] {
+    transition: none;
   }
 }
 

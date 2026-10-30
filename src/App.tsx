@@ -8,7 +8,6 @@ import { Header } from './components/Header'
 import { Hero } from './components/Hero'
 import { ChapterIndicator } from './components/ChapterIndicator'
 import { Projects } from './components/Projects'
-import { projects } from './data/projects'
 import { Skills } from './components/Skills'
 import { Path } from './components/Path'
 import { About } from './components/About'
@@ -16,10 +15,10 @@ import { Contact } from './components/Contact'
 import { Footer } from './components/Footer'
 import { Cursor } from './components/Cursor'
 
-// Sections montées après le hero, dans l'ordre de la page (les trois
-// chapitres de projets d'abord, un par un)
+// Sections montées après le hero, dans l'ordre de la page (le carrousel
+// des projets d'abord)
 const LATER = [Skills, Path, About, Contact]
-const STEPS = projects.length + LATER.length + 1
+const STEPS = LATER.length + 2
 
 export default function App() {
   const { t, lang } = useLang()
@@ -94,8 +93,8 @@ export default function App() {
       <Header ready={introDone} />
       <main id="contenu">
         <Hero ready={introDone} motion={motion} />
-        {mounted > 0 && <Projects motion={motion} count={Math.min(mounted, projects.length)} />}
-        {LATER.slice(0, Math.max(0, mounted - projects.length)).map((Section, i) => (
+        {mounted > 0 && <Projects motion={motion} />}
+        {LATER.slice(0, Math.max(0, mounted - 1)).map((Section, i) => (
           <Section key={i} motion={motion} />
         ))}
       </main>
