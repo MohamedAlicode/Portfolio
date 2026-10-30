@@ -20,7 +20,7 @@ const n = projects.length
 export function Projects({ motion }: { motion: boolean }) {
   const { t, lang } = useLang()
   const root = useRef<HTMLElement>(null)
-  const c = useCarousel({ count: n, motion, initial: Math.max(0, projects.findIndex((p) => `#${p.slug}` === location.hash)) })
+  const c = useCarousel({ count: n, initial: Math.max(0, projects.findIndex((p) => `#${p.slug}` === location.hash)) })
   const { pos, active, mod, go, step } = c
   const project = projects[active]
 
@@ -71,7 +71,7 @@ export function Projects({ motion }: { motion: boolean }) {
               index={mod(k)}
               total={n}
               offset={k - pos}
-              playing={k === pos && c.visible && motion && !c.stopped}
+              playing={k === pos && c.visible && !c.stopped}
               onSelect={() => step(k - pos)}
             />
           ))}

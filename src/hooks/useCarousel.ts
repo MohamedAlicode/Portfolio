@@ -10,10 +10,11 @@ const SWIPE = 50 // pixels à glisser pour changer de carte
 // - il avance tout seul toutes les `delay` secondes (fillRef reçoit --fill,
 //   de 0 à 1, pour le point qui se remplit) ;
 // - il s'arrête au survol, quand on navigue dedans au clavier, hors de
-//   l'écran, onglet caché, pendant un glissé, ou avec le bouton Pause ;
-//   il ne démarre pas tout seul si le système demande moins d'animations ;
+//   l'écran, onglet caché, pendant un glissé, ou avec le bouton Pause
+//   (il défile même si le système demande moins d'animations : c'est le
+//   choix de l'auteur du site, et le bouton Pause reste là pour l'arrêter) ;
 // - on le pilote aussi aux flèches du clavier et en glissant.
-export function useCarousel({ count, motion, delay = 6, initial = 0 }: { count: number; motion: boolean; delay?: number; initial?: number }) {
+export function useCarousel({ count, delay = 6, initial = 0 }: { count: number; delay?: number; initial?: number }) {
   const mod = useCallback((i: number) => ((i % count) + count) % count, [count])
   const region = useRef<HTMLDivElement>(null)
   const track = useRef<HTMLDivElement>(null)
@@ -21,7 +22,7 @@ export function useCarousel({ count, motion, delay = 6, initial = 0 }: { count: 
   const [pos, setPos] = useState(initial)
 
   // Pourquoi le défilement automatique est arrêté (il faut qu'aucune raison ne tienne)
-  const [stopped, setStopped] = useState(!motion) // bouton Pause / Lecture
+  const [stopped, setStopped] = useState(false) // bouton Pause / Lecture
   const [hover, setHover] = useState(false)
   const [focused, setFocused] = useState(false)
   const [visible, setVisible] = useState(false)
