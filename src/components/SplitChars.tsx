@@ -33,7 +33,7 @@ export function SplitChars({ lines, className, emphasisClassName = 'italic text-
       <span className="sr-only">{plain}</span>
       <span aria-hidden="true" ref={ref}>
         {lines.map((line, li) => (
-          <span key={li} className="split-line">
+          <span key={li} className="block">
             {line.split(/(\*[^*]+\*)/).filter(Boolean).map((part, pi) => {
               const em = part.startsWith('*')
               const text = em ? part.slice(1, -1) : part
@@ -96,7 +96,8 @@ function kernChars(root: HTMLElement) {
     for (let i = 0; i < masks.length - 1; i++) {
       const a = masks[i].textContent ?? ''
       const b = masks[i + 1].textContent ?? ''
-      masks[i].style.marginRight = `${((width(font, a + b) - width(font, a) - width(font, b)) / 100).toFixed(4)}em`
+      // Le masque déborde de 0,12 em de chaque côté (voir .char-mask)
+      masks[i].style.marginRight = `${((width(font, a + b) - width(font, a) - width(font, b)) / 100 - 0.12).toFixed(4)}em`
     }
   })
 }

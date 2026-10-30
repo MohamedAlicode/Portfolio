@@ -60,7 +60,7 @@ export const hero = {
   },
   ctaProjects: { fr: 'Voir mes projets', en: 'See my projects' },
   ctaContact: { fr: 'Me contacter', en: 'Contact me' },
-  // Cartouche façon plan technique, en bas à droite du hero (grand écran)
+  // Cartouche façon plan technique, à côté du titre du hero (grand écran)
   sheet: {
     title: { fr: 'Fiche technique', en: 'Spec sheet' },
     rows: [
@@ -318,13 +318,13 @@ export const about = {
   kicker: { fr: 'À propos', en: 'About' },
   // Révélé mot à mot au scroll ; les mots entre * * passent en italique bronze
   text: {
-    fr: 'En dehors du code, je monte, j’optimise et je répare des *PC*. Je joue surtout à des FPS et à des jeux de rôle tactiques, et je développe aussi sur *Unreal Engine*, en Blueprints et en C++. Dès que je peux, je *voyage*. Animer des ateliers pour des enfants m’a appris à *expliquer simplement*, et c’est aussi utile en équipe. Je cherche maintenant une équipe avec qui construire des produits solides, et continuer d’apprendre.',
-    en: 'Away from code, I build, tune and repair *PCs*. I mostly play FPS and tactical RPGs, and I also develop in *Unreal Engine*, with Blueprints and C++. Whenever I can, I *travel*. Running workshops for children taught me to *explain things simply*, which helps in a team too. Now I’m looking for a team to build solid products with, and to keep learning.',
+    fr: 'En dehors du code, je monte, j’optimise et je répare des *PC*. Je joue surtout à des FPS et à des jeux de rôle tactiques, et je développe aussi sur *Unreal Engine*, en Blueprints et en C++. J’ai *voyagé* en Espagne, en Belgique, aux Pays-Bas, en Allemagne, en Suisse, en Angleterre, en Tunisie, en Indonésie et en Arabie saoudite. Animer des ateliers pour des enfants m’a appris à *expliquer simplement*, et c’est aussi utile en équipe. Je cherche maintenant une équipe avec qui construire des produits solides, et continuer d’apprendre.',
+    en: 'Away from code, I build, tune and repair *PCs*. I mostly play FPS and tactical RPGs, and I also develop in *Unreal Engine*, with Blueprints and C++. I’ve *travelled* to Spain, Belgium, the Netherlands, Germany, Switzerland, England, Tunisia, Indonesia and Saudi Arabia. Running workshops for children taught me to *explain things simply*, which helps in a team too. Now I’m looking for a team to build solid products with, and to keep learning.',
   },
   facts: [
     { k: { fr: 'Matériel', en: 'Hardware' }, v: { fr: 'Montage et réparation de PC', en: 'Building and repairing PCs' } },
     { k: { fr: 'Jeux', en: 'Games' }, v: { fr: 'FPS, jeux de rôle tactiques', en: 'FPS, tactical RPGs' } },
-    { k: { fr: 'Ailleurs', en: 'Elsewhere' }, v: { fr: 'Voyages', en: 'Travel' } },
+    { k: { fr: 'Ailleurs', en: 'Elsewhere' }, v: { fr: 'Voyages, 9 pays', en: 'Travel, 9 countries' } },
     { k: { fr: 'Permis', en: 'Licence' }, v: { fr: 'A2 et B', en: 'A2 and B' } },
   ],
 }

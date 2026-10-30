@@ -132,15 +132,32 @@ export function Hero({ ready, motion }: { ready: boolean; motion: boolean }) {
               </span>
               {t(hero.status)}
             </p>
-            <h1
-              id="hero-title"
-              data-chars
-              {...inAttr}
-              style={{ '--base': '100ms' } as CSSProperties}
-              className="font-display text-[clamp(52px,min(9.4vw,15svh),156px)] leading-[0.92] font-normal tracking-[-0.025em]"
-            >
-              <SplitChars lines={t(hero.title)} />
-            </h1>
+            <div className="xl:flex xl:items-center xl:justify-between xl:gap-12">
+              <h1
+                id="hero-title"
+                data-chars
+                {...inAttr}
+                style={{ '--base': '100ms' } as CSSProperties}
+                className="font-display text-[clamp(52px,min(9.4vw,15svh),156px)] leading-[0.92] font-normal tracking-[-0.025em]"
+              >
+                <SplitChars lines={t(hero.title)} />
+              </h1>
+              {/* Cartouche façon plan technique, à côté du titre (grand écran) */}
+              <div className="hidden w-[340px] shrink-0 border border-line text-[13px] xl:block">
+                <p data-up {...inAttr} style={{ '--base': '550ms', '--d': 5 } as CSSProperties} className="label flex justify-between border-b border-line px-4 py-3 text-accent-ink">
+                  <span>{t(hero.sheet.title)}</span>
+                  <span className="tabular-nums">2026</span>
+                </p>
+                <dl className="m-0">
+                  {hero.sheet.rows.map((row) => (
+                    <div data-up {...inAttr} style={{ '--base': '550ms', '--d': 6 } as CSSProperties} key={row.k.fr} className="grid grid-cols-[96px_1fr] border-b border-line last:border-b-0">
+                      <dt className="label border-r border-line px-4 py-2.5 text-[10.5px] text-muted">{t(row.k)}</dt>
+                      <dd className="m-0 px-4 py-2.5">{t(row.v)}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            </div>
             <p data-up {...inAttr} style={{ '--base': '550ms', '--d': 1 } as CSSProperties} className="mt-8 max-w-[54ch] text-[clamp(17px,1.5vw,20px)] leading-[1.6] text-muted">
               {t(hero.intro)}
             </p>
@@ -173,26 +190,6 @@ export function Hero({ ready, motion }: { ready: boolean; motion: boolean }) {
               </span>
             </span>
           )}
-        </div>
-
-        {/* Cartouche façon plan technique (grand écran) */}
-        <div
-          data-hero-content
-          className="absolute right-[max(48px,calc((100vw-1320px)/2+48px))] hidden w-[340px] border border-line text-[13px] xl:block"
-          style={{ bottom: 'calc(96px + env(safe-area-inset-bottom, 0px))' }}
-        >
-          <p data-up {...inAttr} style={{ '--base': '550ms', '--d': 5 } as CSSProperties} className="label flex justify-between border-b border-line px-4 py-3 text-accent-ink">
-            <span>{t(hero.sheet.title)}</span>
-            <span className="tabular-nums">2026</span>
-          </p>
-          <dl className="m-0">
-            {hero.sheet.rows.map((row) => (
-              <div data-up {...inAttr} style={{ '--base': '550ms', '--d': 6 } as CSSProperties} key={row.k.fr} className="grid grid-cols-[96px_1fr] border-b border-line last:border-b-0">
-                <dt className="label border-r border-line px-4 py-2.5 text-[10.5px] text-muted">{t(row.k)}</dt>
-                <dd className="m-0 px-4 py-2.5">{t(row.v)}</dd>
-              </div>
-            ))}
-          </dl>
         </div>
 
         {/* Le cercle qui s'ouvre sur les projets (le vrai titre de section est dans Projets).
