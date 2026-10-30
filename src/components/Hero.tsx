@@ -1,7 +1,7 @@
 import { useRef, type CSSProperties } from 'react'
 import { hero, ui } from '../data/content'
 import { useLang } from '../lib/i18n'
-import { gsap, finePointer, useGSAP } from '../lib/motion'
+import { gsap, useGSAP } from '../lib/motion'
 import { setChapter, setZone } from '../lib/chapters'
 import { scrollToHash } from '../lib/scroll'
 import { useMagnetic } from '../hooks/useMagnetic'
@@ -59,35 +59,6 @@ export function Hero({ ready, motion }: { ready: boolean; motion: boolean }) {
     { scope: root, dependencies: [motion, lang], revertOnUpdate: true },
   )
 
-  // Viseur de dessinateur qui suit le curseur sur la grille
-  useGSAP(
-    () => {
-      if (!motion || !finePointer()) return
-      const area = root.current!.querySelector<HTMLElement>('[data-sticky]')!
-      const cross = area.querySelector<HTMLElement>('[data-cross]')!
-      const label = cross.querySelector<HTMLElement>('[data-coords]')!
-      const xTo = gsap.quickTo(cross, '--x', { duration: 0.5, ease: 'power3.out' })
-      const yTo = gsap.quickTo(cross, '--y', { duration: 0.5, ease: 'power3.out' })
-      const move = (e: PointerEvent) => {
-        const r = area.getBoundingClientRect()
-        const x = e.clientX - r.left
-        const y = e.clientY - r.top
-        xTo(x)
-        yTo(y)
-        label.textContent = `x ${String(Math.round(x)).padStart(4, '0')}  ·  y ${String(Math.round(y)).padStart(4, '0')}`
-        gsap.to(cross, { autoAlpha: 1, duration: 0.3, overwrite: 'auto' })
-      }
-      const leave = () => gsap.to(cross, { autoAlpha: 0, duration: 0.4, overwrite: 'auto' })
-      area.addEventListener('pointermove', move)
-      area.addEventListener('pointerleave', leave)
-      return () => {
-        area.removeEventListener('pointermove', move)
-        area.removeEventListener('pointerleave', leave)
-      }
-    },
-    { scope: root, dependencies: [motion] },
-  )
-
   // Entrée, une fois l'intro levée : jouée en CSS (lettres puis blocs)
   const inAttr = ready ? { 'data-in': '' } : {}
 
@@ -104,24 +75,8 @@ export function Hero({ ready, motion }: { ready: boolean; motion: boolean }) {
       className="relative"
       style={{ height: motion ? '210vh' : undefined }}
     >
-      <div data-sticky className={`${motion ? 'sticky top-0 h-svh' : 'relative min-h-svh'} overflow-hidden`}>
+      <div className={`${motion ? 'sticky top-0 h-svh' : 'relative min-h-svh'} overflow-hidden`}>
         <Blueprint start={ready} />
-
-        {/* Viseur */}
-        <div
-          data-cross
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 opacity-0"
-          style={{ ['--x' as string]: '0px', ['--y' as string]: '0px' }}
-        >
-          <span className="absolute inset-y-0 w-px bg-accent/35" style={{ left: 'var(--x)' }} />
-          <span className="absolute inset-x-0 h-px bg-accent/35" style={{ top: 'var(--y)' }} />
-          <span
-            data-coords
-            className="label absolute whitespace-pre text-[10px] tabular-nums tracking-[0.12em] text-accent-ink"
-            style={{ left: 'calc(var(--x) + 12px)', top: 'calc(var(--y) + 10px)' }}
-          />
-        </div>
 
         <div className="wrap relative flex h-full min-h-svh flex-col justify-center pt-24 pb-24">
           <div data-hero-content className="origin-[0%_50%]">
