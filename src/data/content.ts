@@ -78,8 +78,8 @@ export const hero = {
     en: 'Three projects, designed and built end to end.',
   },
   portalText: {
-    fr: 'Chaque démo tourne en boucle\u00a0: cliquez dessus pour ouvrir le site en vrai.',
-    en: 'Each demo plays on a loop: click it to open the real site.',
+    fr: 'Les projets défilent tout seuls\u00a0: glissez ou utilisez les flèches, et cliquez sur une démo pour ouvrir le site en vrai.',
+    en: 'The projects scroll on their own: swipe or use the arrows, and click a demo to open the real site.',
   },
 }
 
@@ -107,16 +107,26 @@ export const projectsUi = {
   stack: { fr: 'Stack', en: 'Stack' },
   demo: { fr: 'Voir la démo', en: 'Live demo' },
   code: { fr: 'Voir le code', en: 'Source code' },
+  // Carrousel
+  carousel: { fr: 'Carrousel des projets', en: 'Project carousel' },
+  slide: { fr: 'projet', en: 'project' },
+  of: { fr: 'sur', en: 'of' },
+  prev: { fr: 'Projet précédent', en: 'Previous project' },
+  next: { fr: 'Projet suivant', en: 'Next project' },
+  show: { fr: 'Afficher', en: 'Show' },
+  autoPause: { fr: 'Arrêter le défilement automatique', en: 'Stop automatic scrolling' },
+  autoPlay: { fr: 'Lancer le défilement automatique', en: 'Start automatic scrolling' },
 }
 
 // Bandeau défilant entre les projets et les compétences (décoratif)
 export const marquee = ['React', 'Next.js', 'TypeScript', 'Node.js', 'PostgreSQL', 'Socket.IO', 'GSAP', 'Prisma', 'Tailwind CSS']
 
 // Où une compétence a servi : un projet (ancre de son chapitre) ou un poste du parcours
-export const proofs: Record<string, { name: string; href: string }> = {
-  'maison-cadran': { name: 'Maison Cadran', href: '#maison-cadran' },
-  altair: { name: 'Altaïr', href: '#altair' },
-  'quiz-live': { name: 'Quiz Live', href: '#quiz-live' },
+// (un projet ouvre le carrousel sur sa carte)
+export const proofs: Record<string, { name: string; href: string; project?: string }> = {
+  'maison-cadran': { name: 'Maison Cadran', href: '#projets', project: 'maison-cadran' },
+  altair: { name: 'Altaïr', href: '#projets', project: 'altair' },
+  'quiz-live': { name: 'Quiz Live', href: '#projets', project: 'quiz-live' },
   laptopcstore: { name: 'Laptopcstore', href: '#parcours-laptopcstore' },
   certideal: { name: 'Certideal', href: '#parcours-certideal' },
 }
@@ -130,10 +140,15 @@ export const skills = {
     en: ['What I use,', 'and *where*', 'I used it.'],
   },
   intro: {
-    fr: 'Pas de barres de pourcentage : chaque domaine renvoie aux projets ou aux postes où je l’ai mis en pratique.',
-    en: 'No percentage bars: each area points to the projects or jobs where I put it into practice.',
+    fr: 'Pas de barres de pourcentage : chaque domaine renvoie aux projets ou aux postes où je l’ai mis en pratique. Les cartes défilent toutes seules, ou à la main.',
+    en: 'No percentage bars: each area points to the projects or jobs where I put it into practice. The cards scroll on their own, or by hand.',
   },
   proofLabel: { fr: 'Vu dans', en: 'Used in' },
+  // Carrousel
+  carousel: { fr: 'Carrousel des compétences', en: 'Skills carousel' },
+  slide: { fr: 'domaine', en: 'area' },
+  prev: { fr: 'Domaine précédent', en: 'Previous area' },
+  next: { fr: 'Domaine suivant', en: 'Next area' },
   groups: [
     {
       name: { fr: 'Front-end', en: 'Front-end' },
