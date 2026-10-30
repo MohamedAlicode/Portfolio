@@ -387,7 +387,7 @@ html.lenis body {
 }
 .carousel-dot[aria-current] > span {
   width: 30px;
-  background: var(--line);
+  background: color-mix(in srgb, var(--muted) 35%, transparent);
 }
 .carousel-dot[aria-current] > span::after {
   content: '';
@@ -412,16 +412,6 @@ html.lenis body {
   transition: opacity 0.6s 0.15s;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .carousel-slide,
-  .carousel-veil,
-  .carousel-caption,
-  .carousel-dot > span,
-  .project-details,
-  .project-details[data-active] {
-    transition: none;
-  }
-}
 
 /* Parcours : les étapes s'allument quand la lecture les atteint */
 .entry-dot {
@@ -460,7 +450,6 @@ html.lenis body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .skill-card,
   .entry-dot,
   .entry-body *,
   .mail-link {

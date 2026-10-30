@@ -22,7 +22,7 @@ export function Skills({ motion }: { motion: boolean }) {
   const root = useRef<HTMLElement>(null)
   useSection(root, 'base', { id: 'competences', num: 4 })
   useReveal(root, motion, [lang])
-  const c = useCarousel({ count: n, motion, delay: 4 })
+  const c = useCarousel({ count: n, delay: 4 })
   const { pos, active, mod, step } = c
 
   const slots = [-3, -2, -1, 0, 1, 2, 3].map((o) => pos + o)
