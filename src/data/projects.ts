@@ -89,7 +89,7 @@ export const projects: Project[] = [
     ],
     stack: ['Next.js 16', 'React 19', 'TypeScript', 'Tailwind 4', 'PostgreSQL', 'Prisma 7', 'Stripe', 'Auth.js', 'Resend', 'Vitest', 'GitHub Actions'],
     demo: 'https://maison-cadran.vercel.app',
-    code: 'https://github.com/MohamedAlicode/Maison-Cadran',
+    code: 'https://github.com/MohamedAlicode/maison-cadran',
     url: 'maison-cadran.vercel.app',
     alt: {
       fr: 'Démo de Maison Cadran : accueil, catalogue filtré, fiche produit avec galerie, ajout au panier.',
@@ -211,7 +211,7 @@ export const projects: Project[] = [
     ],
     stack: ['React 19', 'Vite', 'Zustand', 'Node.js', 'Express 5', 'Socket.IO', 'PostgreSQL', 'Prisma', 'Zod', 'Framer Motion', 'GSAP', 'Docker'],
     demo: 'https://quiz-live-hk3r.onrender.com',
-    code: 'https://github.com/MohamedAlicode/online-quiz',
+    code: 'https://github.com/MohamedAlicode/quiz-live-temps-reel',
     demoNote: {
       fr: 'Hébergement gratuit : la première ouverture peut prendre une trentaine de secondes.',
       en: 'Free hosting: the first visit can take about thirty seconds.',
